@@ -32,12 +32,12 @@ namespace Quantum.TriangleProblemProject
 		body
 		{
 			mutable ret = -1;
-			using (input = Qubit[Length(adjMat[0])])
-			{
-				HTransform(input); //apply Hadamard Transform
-				mutable complexity = (Double)Length(adjMat[0]);
-				mutable iterations = Sqrt(complexity);
-			}
+			//using (input = Qubit[Length(adjMat[0])])
+			//{
+			//	HTransform(input); //apply Hadamard Transform
+			//	mutable complexity = (Double)Length(adjMat[0]);
+			//	mutable iterations = Sqrt(complexity);
+			//}
 			return ret;
 		}
 	
