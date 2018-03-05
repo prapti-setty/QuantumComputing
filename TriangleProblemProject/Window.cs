@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Window.cs by Isaac Walker
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Quantum.Simulation.Core;
+
 using Microsoft.Quantum.Simulation.Simulators;
 
 namespace Quantum.TriangleProblemProject
@@ -16,11 +18,12 @@ namespace Quantum.TriangleProblemProject
     {
         private Boolean isSelected = false;
         private int selectedVertex, ctrlVertex = -1;
-        
+        int[,] baseMatrix = { { 1, 1 }, { 1, -1 } };
         Random randGen;
         Graph g;
         public Window()
         {
+            
             InitializeComponent();
             randGen = new Random();
             InitializeComponent();
@@ -31,7 +34,28 @@ namespace Quantum.TriangleProblemProject
             g.addVertex("c", getRandColor(), 45, 113);
             g.addVertex("d", getRandColor(), 90, 160);
             randGen = new Random();
-
+            MessageBox.Show(getMString(getHMatrix(1)), "Result");
+        }
+        private int power(int i,int j)
+        {
+            int r = 1;
+            while (j > 0)
+            {
+                r = r * i;
+                j = j - 1;
+            }
+            return r;
+        }
+        private string getMString(int[,] inp)
+        {
+            string str = "";
+            for (int i = 0; i < inp.GetLength(0); i++)
+            {
+                for (int j = 0; j < inp.GetLength(0); j++)
+                    str = str + " " + inp[i, j];
+                str = str + "\n";
+            }
+            return str;
         }
         private void Window_Load(object sender, EventArgs e)
         {
@@ -163,7 +187,30 @@ namespace Quantum.TriangleProblemProject
             Refresh();
 
         }
-
+        private int[,] getHMatrix(int input)
+        {
+            int size = power(2, input);
+            int[,] returnArr = new int[size, size];
+            if(input == 1)
+            {
+                return baseMatrix;
+            }
+            else
+            {
+                int[,] quadrantMat = getHMatrix(input -1);
+                for(int i =0;i<returnArr.GetLength(0)/2;i++)
+                {
+                    for(int j=0;j<returnArr.GetLength(0)/2;j++)
+                    {
+                        returnArr[i, j] = quadrantMat[i, j];
+                        returnArr[i + quadrantMat.GetLength(0), j] = quadrantMat[i, j];
+                        returnArr[i, j + quadrantMat.GetLength(0)] = quadrantMat[i, j];
+                        returnArr[i + quadrantMat.GetLength(0), j + quadrantMat.GetLength(0)] = quadrantMat[i, j] * -1;
+                    }
+                }
+            }
+            return returnArr;
+        }
         private void edgeButton_Click(object sender, EventArgs e)
         {
             if (ctrlVertex >= 0 && selectedVertex >= 0)

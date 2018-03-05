@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Graph class by Isaac Walker
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -103,6 +105,12 @@ namespace Quantum.TriangleProblemProject
             }
 
 
+        }
+        //classical implementation of triangle finding algorithm
+        public (int,int,int) findTriangleClassical()
+        {
+
+            return (1, 2, 3);
         }
     }
    }
