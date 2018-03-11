@@ -1,5 +1,8 @@
 ﻿//operation.qs by Isaac Walker
 //grovers method as found at https://www.cs.cmu.edu/~odonnell/quantum15/lecture04.pdf
+// For triangle finding, possibly use one of these papers:
+// 2003: https://arxiv.org/abs/quant-ph/0310134
+// 2014: https://arxiv.org/abs/1407.0085
 
 namespace Quantum.TriangleProblemProject
 {
