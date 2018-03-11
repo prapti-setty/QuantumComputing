@@ -96,7 +96,7 @@ namespace Quantum.TriangleProblemProject
             {
                 getTriangleInGraph(g.getAdjMat());
             }
-            else if (classicalRadioButton.Checked)
+            else if (bruteForceRadioButton.Checked)
             {
                 runBruteForce(g.getAdjMat());
             } else {
@@ -265,11 +265,6 @@ namespace Quantum.TriangleProblemProject
         private void quantumRadioButton_CheckedChanged(object sender, EventArgs e)
         {
        
-        }
-
-        private void classicalRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-          
         }
 
         private void resetButton_Click(object sender, EventArgs e)

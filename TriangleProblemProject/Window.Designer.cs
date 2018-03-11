@@ -35,7 +35,7 @@
             this.edgeButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.quantumRadioButton = new System.Windows.Forms.RadioButton();
-            this.classicalRadioButton = new System.Windows.Forms.RadioButton();
+            this.bruteForceRadioButton = new System.Windows.Forms.RadioButton();
             this.resetButton = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -122,18 +122,17 @@
             this.quantumRadioButton.UseVisualStyleBackColor = true;
             this.quantumRadioButton.CheckedChanged += new System.EventHandler(this.quantumRadioButton_CheckedChanged);
             // 
-            // classicalRadioButton
+            // bruteForceRadioButton
             // 
-            this.classicalRadioButton.AutoSize = true;
-            this.classicalRadioButton.Location = new System.Drawing.Point(28, 281);
-            this.classicalRadioButton.Margin = new System.Windows.Forms.Padding(4);
-            this.classicalRadioButton.Name = "classicalRadioButton";
-            this.classicalRadioButton.Size = new System.Drawing.Size(171, 21);
-            this.classicalRadioButton.TabIndex = 7;
-            this.classicalRadioButton.TabStop = true;
-            this.classicalRadioButton.Text = "Classical - Brute Force";
-            this.classicalRadioButton.UseVisualStyleBackColor = true;
-            this.classicalRadioButton.CheckedChanged += new System.EventHandler(this.classicalRadioButton_CheckedChanged);
+            this.bruteForceRadioButton.AutoSize = true;
+            this.bruteForceRadioButton.Location = new System.Drawing.Point(28, 281);
+            this.bruteForceRadioButton.Margin = new System.Windows.Forms.Padding(4);
+            this.bruteForceRadioButton.Name = "bruteForceRadioButton";
+            this.bruteForceRadioButton.Size = new System.Drawing.Size(171, 21);
+            this.bruteForceRadioButton.TabIndex = 7;
+            this.bruteForceRadioButton.TabStop = true;
+            this.bruteForceRadioButton.Text = "Classical - Brute Force";
+            this.bruteForceRadioButton.UseVisualStyleBackColor = true;
             // 
             // resetButton
             // 
@@ -189,7 +188,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.resetButton);
-            this.Controls.Add(this.classicalRadioButton);
+            this.Controls.Add(this.bruteForceRadioButton);
             this.Controls.Add(this.quantumRadioButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.edgeButton);
@@ -215,7 +214,7 @@
         private System.Windows.Forms.Button edgeButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RadioButton quantumRadioButton;
-        private System.Windows.Forms.RadioButton classicalRadioButton;
+        private System.Windows.Forms.RadioButton bruteForceRadioButton;
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
