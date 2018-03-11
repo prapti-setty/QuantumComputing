@@ -23,8 +23,6 @@ namespace Quantum.TriangleProblemProject
         Graph g;
         public Window()
         {
-            
-            InitializeComponent();
             randGen = new Random();
             InitializeComponent();
             g = new Graph();
@@ -33,7 +31,6 @@ namespace Quantum.TriangleProblemProject
             g.addVertex("b", getRandColor(), 130, 90);
             g.addVertex("c", getRandColor(), 45, 113);
             g.addVertex("d", getRandColor(), 90, 160);
-            randGen = new Random();
             MessageBox.Show(getMString(getHMatrix(1)), "Result");
         }
         private int power(int i,int j)
