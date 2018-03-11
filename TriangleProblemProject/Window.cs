@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Microsoft.Quantum.Simulation.Core;
 
 using Microsoft.Quantum.Simulation.Simulators;
+using Quantum.TriangleProblemProject.ClassicalAlgorithms;
 
 namespace Quantum.TriangleProblemProject
 {
@@ -65,10 +66,14 @@ namespace Quantum.TriangleProblemProject
             var res = decipher.Run(sim, inputArray).Result;
             int acRes = (int)res;
             MessageBox.Show(acRes.ToString(),"Result");
-            
-            
-
         }
+
+        private void runBruteForce(int[,] adjMat) {
+            BruteForceAlgorithm algorithm = new BruteForceAlgorithm();
+            bool result = algorithm.Run(adjMat);
+            MessageBox.Show(result.ToString());
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             DoubleBuffered = true;
@@ -82,13 +87,13 @@ namespace Quantum.TriangleProblemProject
         private void button1_Click(object sender, EventArgs e)
         {
             
-            if (quantumRadioButton.Checked==false)
+            if (quantumRadioButton.Checked)
             {
                 getTriangleInGraph(g.getAdjMat());
             }
-            else if(quantumRadioButton.Checked==true)
+            else
             {
-
+                runBruteForce(g.getAdjMat());
             }
 
         }

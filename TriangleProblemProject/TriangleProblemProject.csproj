@@ -74,6 +74,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassicalAlgorithms\BruteForceAlgorithm.cs" />
+    <Compile Include="ClassicalAlgorithms\IClassicalAlgorithm.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
