@@ -74,6 +74,12 @@ namespace Quantum.TriangleProblemProject
             MessageBox.Show(result.ToString());
         }
 
+        private void runTrace(int[,] adjMat) {
+            TraceAlgorithm algorithm = new TraceAlgorithm();
+            bool result = algorithm.Run(adjMat);
+            MessageBox.Show(result.ToString());
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             DoubleBuffered = true;
@@ -86,14 +92,15 @@ namespace Quantum.TriangleProblemProject
         //Find Triangle button clicked
         private void button1_Click(object sender, EventArgs e)
         {
-            
             if (quantumRadioButton.Checked)
             {
                 getTriangleInGraph(g.getAdjMat());
             }
-            else
+            else if (classicalRadioButton.Checked)
             {
                 runBruteForce(g.getAdjMat());
+            } else {
+                runTrace(g.getAdjMat());
             }
 
         }
