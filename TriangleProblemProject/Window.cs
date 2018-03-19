@@ -297,7 +297,6 @@ namespace Quantum.TriangleProblemProject
             foreach (var algorithm in algorithms) {
                 myModel.Series.Add(new FunctionSeries((x => {
                     int timeIndex = (int)(x - minVertices) / verticesGap;
-                    Console.WriteLine(algorithm.MaxTime);
                     return algorithm.Times[timeIndex] / algorithm.MaxTime;
                 }), minVertices, maxVertices, (double)verticesGap, algorithm.Algorithm.Name));
             }
