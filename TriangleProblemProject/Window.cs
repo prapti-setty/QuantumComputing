@@ -13,6 +13,9 @@ using System.Diagnostics;
 
 using Microsoft.Quantum.Simulation.Simulators;
 using Quantum.TriangleProblemProject.ClassicalAlgorithms;
+using OxyPlot;
+using OxyPlot.Series;
+using OxyPlot.WindowsForms;
 
 namespace Quantum.TriangleProblemProject
 {
@@ -236,6 +239,72 @@ namespace Quantum.TriangleProblemProject
             g = new Graph();
             Refresh();
         }
+
+        private class AlgorithmResults {
+            public int Repetitions = 1;
+            public IClassicalAlgorithm Algorithm;
+            public double MaxTime;
+            public List<double> Times = new List<double>();
+
+            public AlgorithmResults(IClassicalAlgorithm algorithm) {
+                Algorithm = algorithm;
+            }
+
+            public void AddTime(double time) {
+                Times.Add(time);
+                MaxTime = Math.Max(MaxTime, time);
+            }
+        }
+
+        private void btnGraph_Click(object sender, EventArgs e) {
+            var myModel = new PlotModel { Title = "Results" };
+            Dictionary<int, int[,]> matrices = new Dictionary<int, int[,]>();
+            int minVertices = 100;
+            int maxVertices = 1000;
+            int verticesGap = 100;
+            for (int i = minVertices; i <= maxVertices; i += verticesGap) {
+                int[,] matrix = new int[i, i];
+                for (int j = 0; j < i; j++) {
+                    for (int k = j + 1; k < i; k++) {
+                        if (randGen.NextDouble() < 0.2) {
+                            matrix[j, k] = 1;
+                            matrix[k, j] = 1;
+                        }
+                    }
+                }
+
+                matrices[i] = matrix;
+            }
+
+            List<AlgorithmResults> algorithms = new List<AlgorithmResults> {
+                // Repeat brute force a bunch of times, else its times are too small.
+                new AlgorithmResults(new BruteForceAlgorithm()) { Repetitions = 10000 },
+                new AlgorithmResults(new TraceAlgorithm()),
+            };
+
+            foreach (var algorithm in algorithms) {
+                for (int vertices = minVertices; vertices <= maxVertices; vertices += verticesGap) {
+                    var matrix = matrices[vertices];
+                    Stopwatch watch = Stopwatch.StartNew();
+                    for (int i = 0; i < algorithm.Repetitions; i++) {
+                        algorithm.Algorithm.Run(matrix);
+                    }
+                    algorithm.AddTime(watch.ElapsedMilliseconds);
+                }
+            }
+
+            foreach (var algorithm in algorithms) {
+                myModel.Series.Add(new FunctionSeries((x => {
+                    int timeIndex = (int)(x - minVertices) / verticesGap;
+                    Console.WriteLine(algorithm.MaxTime);
+                    return algorithm.Times[timeIndex] / algorithm.MaxTime;
+                }), minVertices, maxVertices, (double)verticesGap, algorithm.Algorithm.Name));
+            }
+            GraphForm graphForm = new GraphForm();
+            graphForm.View.Model = myModel;
+            graphForm.Show();
+        }
+
         //Converts a 2d array to a usable qarray
         static QArray<QArray<long>> arrToQArray(int[,] input)
         {

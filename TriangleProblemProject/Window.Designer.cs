@@ -40,6 +40,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.traceRadioButton = new System.Windows.Forms.RadioButton();
+            this.btnGraph = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // panel1
@@ -179,11 +180,22 @@
             this.traceRadioButton.Text = "Classical - Trace";
             this.traceRadioButton.UseVisualStyleBackColor = true;
             // 
+            // btnGraph
+            // 
+            this.btnGraph.Location = new System.Drawing.Point(13, 385);
+            this.btnGraph.Name = "btnGraph";
+            this.btnGraph.Size = new System.Drawing.Size(121, 37);
+            this.btnGraph.TabIndex = 12;
+            this.btnGraph.Text = "Make Graph";
+            this.btnGraph.UseVisualStyleBackColor = true;
+            this.btnGraph.Click += new System.EventHandler(this.btnGraph_Click);
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(695, 389);
+            this.ClientSize = new System.Drawing.Size(695, 441);
+            this.Controls.Add(this.btnGraph);
             this.Controls.Add(this.traceRadioButton);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -219,5 +231,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton traceRadioButton;
+        private System.Windows.Forms.Button btnGraph;
     }
 }

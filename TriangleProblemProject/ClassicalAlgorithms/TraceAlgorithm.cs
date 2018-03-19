@@ -12,6 +12,8 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
     /// the best known complexity for multiplying matrices.
     /// </summary>
     public class TraceAlgorithm : IClassicalAlgorithm {
+        public string Name => "Trace of Matrix";
+
         public bool Run(int[,] mat) {
             int nodes = mat.GetLength(0);
             int[,] a2 = Multiply(nodes, mat, mat);

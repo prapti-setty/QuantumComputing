@@ -14,6 +14,10 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
     /// </summary>
     interface IClassicalAlgorithm {
         /// <summary>
+        /// Name of the algorithm.
+        /// </summary>
+        string Name { get; }
+        /// <summary>
         /// Run the algorithm. Return whether there is a triangle in the graph.
         /// </summary>
         /// <param name="mat">The adjacency matrix of the graph.</param>

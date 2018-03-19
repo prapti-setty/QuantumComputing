@@ -9,6 +9,8 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
     /// Go through every group of 3 nodes and see if they're connected.
     /// </summary>
     public class BruteForceAlgorithm : IClassicalAlgorithm {
+        public string Name => "Brute Force";
+
         public bool Run(int[,] mat) {
             int nodes = mat.GetLength(0);
             for (int i = 0; i < nodes; i++) {
