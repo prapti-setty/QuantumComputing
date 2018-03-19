@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Quantum.Simulation.Core;
+using System.Diagnostics;
 
 using Microsoft.Quantum.Simulation.Simulators;
 using Quantum.TriangleProblemProject.ClassicalAlgorithms;
@@ -71,17 +72,24 @@ namespace Quantum.TriangleProblemProject
         //Find Triangle button clicked
         private void button1_Click(object sender, EventArgs e)
         {
+            // Create new stopwatch
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             if (quantumRadioButton.Checked)
             {
                 getTriangleInGraph(g.getAdjMat());
+                Console.WriteLine("Quantum Algorithm");
             }
             else if (bruteForceRadioButton.Checked)
             {
                 runBruteForce(g.getAdjMat());
+                Console.WriteLine("Brute Force Algorithm");
             } else {
                 runTrace(g.getAdjMat());
+                Console.WriteLine("Trace Algorithm");
             }
-
+            stopwatch.Stop();
+            Console.WriteLine("Time elapsed (ms): {0}", stopwatch.Elapsed.TotalMilliseconds);
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
