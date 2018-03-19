@@ -31,7 +31,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(681, 464);
             this.Name = "GraphForm";
-            this.Text = "t";
             this.Load += new System.EventHandler(this.GraphForm_Load);
             this.ResumeLayout(false);
 

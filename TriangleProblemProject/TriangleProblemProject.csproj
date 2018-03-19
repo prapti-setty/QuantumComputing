@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="ClassicalAlgorithms\BruteForceAlgorithm.cs" />
     <Compile Include="ClassicalAlgorithms\IClassicalAlgorithm.cs" />
+    <Compile Include="ClassicalAlgorithms\QuantumAlgorithm.cs" />
     <Compile Include="ClassicalAlgorithms\TraceAlgorithm.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Driver.cs" />

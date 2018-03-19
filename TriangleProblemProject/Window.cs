@@ -260,7 +260,7 @@ namespace Quantum.TriangleProblemProject
             var myModel = new PlotModel { Title = "Results" };
             Dictionary<int, int[,]> matrices = new Dictionary<int, int[,]>();
             int minVertices = 100;
-            int maxVertices = 1000;
+            int maxVertices = 500;
             int verticesGap = 100;
             for (int i = minVertices; i <= maxVertices; i += verticesGap) {
                 int[,] matrix = new int[i, i];
@@ -280,6 +280,7 @@ namespace Quantum.TriangleProblemProject
                 // Repeat brute force a bunch of times, else its times are too small.
                 new AlgorithmResults(new BruteForceAlgorithm()) { Repetitions = 10000 },
                 new AlgorithmResults(new TraceAlgorithm()),
+                new AlgorithmResults(new QuantumAlgorithm()),
             };
 
             foreach (var algorithm in algorithms) {
@@ -306,7 +307,7 @@ namespace Quantum.TriangleProblemProject
         }
 
         //Converts a 2d array to a usable qarray
-        static QArray<QArray<long>> arrToQArray(int[,] input)
+        public static QArray<QArray<long>> arrToQArray(int[,] input)
         {
             QArray<QArray<long>> returnArray = new QArray<QArray<long>>();
             for (int i = 0; i < input.GetLength(0); i++)
