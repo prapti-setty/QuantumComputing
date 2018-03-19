@@ -33,7 +33,6 @@ namespace Quantum.TriangleProblemProject
             g.addVertex("b", getRandColor(), 130, 90);
             g.addVertex("c", getRandColor(), 45, 113);
             g.addVertex("d", getRandColor(), 90, 160);
-            MessageBox.Show(getMString(getHMatrix(1)), "Result");
         }
         private void Window_Load(object sender, EventArgs e)
         {
