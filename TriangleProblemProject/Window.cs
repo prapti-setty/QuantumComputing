@@ -241,6 +241,9 @@ namespace Quantum.TriangleProblemProject
         }
 
         private class AlgorithmResults {
+            // How many matrices to run on.
+            public int MatrixCount = 1;
+            // How many times to repeat the same matrix.
             public int Repetitions = 1;
             public IClassicalAlgorithm Algorithm;
             public double MaxTime;
@@ -258,37 +261,45 @@ namespace Quantum.TriangleProblemProject
 
         private void btnGraph_Click(object sender, EventArgs e) {
             var myModel = new PlotModel { Title = "Results" };
-            Dictionary<int, int[,]> matrices = new Dictionary<int, int[,]>();
+            Dictionary<int, List<int[,]>> matrices = new Dictionary<int, List<int[,]>>();
+            int matrixCount = 50;
             int minVertices = 100;
-            int maxVertices = 500;
+            int maxVertices = 1000;
             int verticesGap = 100;
             for (int i = minVertices; i <= maxVertices; i += verticesGap) {
-                int[,] matrix = new int[i, i];
-                for (int j = 0; j < i; j++) {
-                    for (int k = j + 1; k < i; k++) {
-                        if (randGen.NextDouble() < 0.2) {
-                            matrix[j, k] = 1;
-                            matrix[k, j] = 1;
+                List<int[,]> matrixList = new List<int[,]>();
+                for (int matrixI = 0; matrixI < matrixCount; matrixI++) {
+                    int[,] matrix = new int[i, i];
+                    for (int j = 0; j < i; j++) {
+                        for (int k = j + 1; k < i; k++) {
+                            if (randGen.NextDouble() < 0.2) {
+                                matrix[j, k] = 1;
+                                matrix[k, j] = 1;
+                            }
                         }
                     }
+
+                    matrixList.Add(matrix);
                 }
 
-                matrices[i] = matrix;
+                matrices[i] = matrixList;
             }
 
             List<AlgorithmResults> algorithms = new List<AlgorithmResults> {
                 // Repeat brute force a bunch of times, else its times are too small.
-                new AlgorithmResults(new BruteForceAlgorithm()) { Repetitions = 10000 },
-                new AlgorithmResults(new TraceAlgorithm()),
-                new AlgorithmResults(new QuantumAlgorithm()),
+                new AlgorithmResults(new BruteForceAlgorithm()) { MatrixCount = matrixCount, Repetitions = 1000 },
+                //new AlgorithmResults(new TraceAlgorithm()),
+                new AlgorithmResults(new QuantumAlgorithm()) { MatrixCount = matrixCount },
             };
 
             foreach (var algorithm in algorithms) {
                 for (int vertices = minVertices; vertices <= maxVertices; vertices += verticesGap) {
-                    var matrix = matrices[vertices];
+                    var matrixList = matrices[vertices];
                     Stopwatch watch = Stopwatch.StartNew();
-                    for (int i = 0; i < algorithm.Repetitions; i++) {
-                        algorithm.Algorithm.Run(matrix);
+                    for (int i = 0; i < algorithm.MatrixCount; i++) {
+                        for (int j = 0; j < algorithm.Repetitions; j++) {
+                            algorithm.Algorithm.Run(matrixList[i]);
+                        }
                     }
                     algorithm.AddTime(watch.ElapsedMilliseconds);
                 }
