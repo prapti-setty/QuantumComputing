@@ -16,25 +16,36 @@ namespace Quantum.TriangleProblemProject
 		
 		body
 		{
-			return groverSearchFindThirdVer(instr,0,1);
+			mutable retArr = new Int[Length(instr)];
+			repeat
+			{
+				set retArr = groverSearchFindThirdVer(instr,0,1);
+				mutable res = isValidResult(retArr);
+			}
+			until(res == true)
+			fixup
+			{}
+			return retArr;
 			
 		}
 		
 	}
 	//TODO -attempts to find an edge present in a graph
-	operation groverSearchFindEdge(adjMat : Int[][]) :(Int, Int)
+	operation groverSearchFindEdges(adjMat : Int[][],N : Int) :(Int,Int)
 	{
 		body
 		{
-			return (1,2);
+			mutable v1 = -1;
+			mutable v2 = -1;
+			
+			return (v1,v2);
 		}
 	}
-	//TODO -attempts to find third vertex of connected to an edge
+	//attempts to find third vertex of connected to an edge
 	operation groverSearchFindThirdVer(adjMat : Int[][],v1:Int,v2:Int) :(Int[])
 	{	
 		body
 		{
-			mutable ret = 1;
 			mutable retArr = new Int[Length(adjMat)];
 			using (input = Qubit[Length(adjMat[0])])
 			{
@@ -46,7 +57,7 @@ namespace Quantum.TriangleProblemProject
 				for(count in 0..iterations)
 				{
 				    oracleQueryIfTriangle(adjMat,v1,v2,input); // query an edge through the oracle
-					GDVer2(input); //Grover diffusion
+					GD(input); //Grover diffusion
 				}
 				set retArr = MeasureResults(input);
 				ResetAll(input);
@@ -59,6 +70,7 @@ namespace Quantum.TriangleProblemProject
 	{
 		body
 		{
+			
 			
 			return (1,2,3);
 		}
@@ -94,6 +106,10 @@ namespace Quantum.TriangleProblemProject
 					{
 						setQubitToOne(qArray[count]);
 					}
+					else
+					{
+						setQubitToZero(qArray[count]);
+					}
 				}
 			}
 			
@@ -106,6 +122,17 @@ namespace Quantum.TriangleProblemProject
         {
             let current = M(q1);
             if (current == Zero)
+            {
+                X(q1);
+            }
+        }
+    }
+	operation setQubitToZero(q1: Qubit) : ()
+    {
+        body
+        {
+            let current = M(q1);
+            if (current != Zero)
             {
                 X(q1);
             }
@@ -186,6 +213,7 @@ namespace Quantum.TriangleProblemProject
 		}
 
 	}
+	//This Measures the QBit string  and encodes the results in an Int[]
 	operation MeasureResults(QArr : Qubit[]) : (Int[])
 	{
 	    body
@@ -207,6 +235,51 @@ namespace Quantum.TriangleProblemProject
 		        
 			}
 			return retArr;
+		}
+	}
+	operation getUniqueEdges(adjMat : Int[][]) : (Int[])
+	{
+		body
+		{
+		   mutable points = Round(Sqrt(ToDouble(Length(adjMat))));
+		   mutable sizeOfArray = getTriangleNumber(points - 1);
+		   mutable retArr = new Int[sizeOfArray];
+		   for(count in 0..(Length(retArr)-1))
+		   {
+		   	
+		   }
+		   return retArr;
+		   
+		}
+	}
+
+	function getTriangleNumber(N : Int) : (Int)
+	{
+		mutable retVal = 1;
+		for(count in 0..N)
+		{
+			set retVal = retVal + count;
+		}
+		return retVal;
+		
+	}
+	operation isValidResult(inp : Int[]) : (Bool)
+	{
+		body
+		{
+			mutable resCount = 0;
+			for(count in 0..(Length(inp)-1))
+			{
+				if(inp[count] == 1)
+				{
+				 set resCount = resCount + 1;
+				 }
+			}
+			if(resCount == 1)
+			{
+			return true;
+			}
+			return false;
 		}
 	}
 	
