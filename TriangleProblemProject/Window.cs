@@ -288,7 +288,7 @@ namespace Quantum.TriangleProblemProject
             List<AlgorithmResults> algorithms = new List<AlgorithmResults> {
                 // Repeat brute force a bunch of times, else its times are too small.
                 new AlgorithmResults(new BruteForceAlgorithm()) { MatrixCount = matrixCount, Repetitions = 1000 },
-                //new AlgorithmResults(new TraceAlgorithm()),
+                new AlgorithmResults(new TraceAlgorithm()),
                 new AlgorithmResults(new QuantumAlgorithm()) { MatrixCount = matrixCount },
             };
 
