@@ -34,6 +34,7 @@ namespace Quantum.TriangleProblemProject
 	{
 		body
 		{
+			
 			mutable edgeArr = getAllEdges(adjMat);
 			mutable retArr = new Int[Length(edgeArr)];
 			using (input = Qubit[Length(edgeArr)])
@@ -47,6 +48,7 @@ namespace Quantum.TriangleProblemProject
 					GD(input); //Grover diffusion
 				}
 				set retArr = MeasureResults(input);
+				ResetAll(input);
 			}
 			return (retArr);
 		}
@@ -121,22 +123,29 @@ namespace Quantum.TriangleProblemProject
 			
 		}
 	}
-	//an oracle query that sets to One f the inputted edge and point
-	//form a triangle
 	//TODO -returns index of triangle vertices
 	operation findTriangle(adjMat : Int[][]) : (Int,Int,Int) 
 	{
 		body
 		{
 			mutable edges = groverSearchFindEdges(adjMat);
-			for(count in 0..(Length(edges)))
+			for(count in 0..(Length(edges)-1))
 			{
 				if(edges[count]==1)
 				{
-					//mutable arr = groverSearchFindThirdVer(adjMat);
+					mutable loc = getLocationInMatrix(count,Length(adjMat[0]));
+					let (numZeros, numOnes) =loc;
+					mutable verOne = numOnes;
+					mutable verTwo = numZeros;
+					mutable arr = groverSearchFindThirdVer(adjMat,verOne,verTwo);
+					if(isValidResult(arr))
+					{
+						mutable verThree = getIndexOfThirdVer(arr);
+						return (verOne,verTwo,verThree);
+					}
 				}
 			}
-			return (1,2,3);
+			return (-1,-1,-1);
 		}
 	}
 	//sets the qubit to one
@@ -290,6 +299,17 @@ namespace Quantum.TriangleProblemProject
 			return false;
 		}
 	}
+	function getIndexOfThirdVer(inp : Int[]) : (Int)
+	{
+		for(count in 0..(Length(inp)-1))
+		{
+			if(inp[count] == 1)
+			{
+				return count;
+			}
+		}
+		return -1;
+	}
 	operation getAllEdges(adjMat : Int[][]):(Int[])
 	{
 		body
@@ -308,4 +328,30 @@ namespace Quantum.TriangleProblemProject
 			return retArr;
 		}
 	}
+	
+	function getLocationInMatrix(position : Int, size : Int):(Int, Int)
+	{
+
+		mutable nextLevel = size - 1;
+		mutable nextGroupStart = 0;
+		mutable increase = 0;
+		mutable nextAdd = 1;
+		repeat
+		{
+			set increase = increase + nextAdd;
+			set nextAdd = nextAdd + 1;
+			set nextGroupStart = nextGroupStart + nextLevel;
+			set nextLevel = nextLevel - 1;
+		}
+		until(nextGroupStart > position)
+		fixup
+		{}
+
+		mutable index = position + increase;
+		mutable x = index / position;
+		mutable y = index % position;
+		
+		return (x,y);
+	}
+
 }
