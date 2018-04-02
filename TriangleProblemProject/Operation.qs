@@ -190,6 +190,7 @@ namespace Quantum.TriangleProblemProject
 			}
 		}
 	}
+<<<<<<< HEAD
 	operation XTransform(inp : Qubit[]) : ()
 	{
 		body
@@ -283,4 +284,25 @@ namespace Quantum.TriangleProblemProject
 		}
 	}
 	
+=======
+
+	operation getAllEdges(adjMat : Int[][]):(Int[])
+	{
+		body
+		{
+			mutable retArr = new Int[((Length(adjMat) * Length(adjMat) - Length(adjMat)) / 2];		// nC2, or (n^2 - n) / 2
+			mutable retArrIndex = 0;
+			for (count in 0..(Length(adjMat) - 1))
+			{
+				for (count2 in count + 1..(Length(adjMat) - 1))
+				{
+					set retArr[retArrIndex] = adjMat[count][count2];
+					retArrIndex++;
+				}
+			}
+
+			return retArr;
+		}
+	}
+>>>>>>> 67c0899e00b884bf44265818a8fa0b9d5268f94a
 }
