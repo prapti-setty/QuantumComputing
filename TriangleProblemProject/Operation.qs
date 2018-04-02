@@ -157,14 +157,14 @@ namespace Quantum.TriangleProblemProject
 	{
 		body
 		{
-			mutable retArr = new Int[((Length(adjMat) * Length(adjMat) - Length(adjMat)) / 2];		// nC2, or (n^2 - n) / 2
+			mutable retArr = new Int[((Length(adjMat) * Length(adjMat)) - Length(adjMat)) / 2];		// nC2, or (n^2 - n) / 2
 			mutable retArrIndex = 0;
 			for (count in 0..(Length(adjMat) - 1))
 			{
 				for (count2 in count + 1..(Length(adjMat) - 1))
 				{
 					set retArr[retArrIndex] = adjMat[count][count2];
-					retArrIndex++;
+					set retArrIndex = retArrIndex + 1;
 				}
 			}
 
