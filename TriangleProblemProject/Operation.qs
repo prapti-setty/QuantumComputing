@@ -25,20 +25,30 @@ namespace Quantum.TriangleProblemProject
 			until(res == true)
 			fixup
 			{}
-			return retArr;
-			
+			return retArr;	
 		}
 		
 	}
 	//TODO -attempts to find an edge present in a graph
-	operation groverSearchFindEdges(adjMat : Int[][],N : Int) :(Int,Int)
+	operation groverSearchFindEdges(adjMat : Int[][]) :(Int[])
 	{
 		body
 		{
-			mutable v1 = -1;
-			mutable v2 = -1;
-			
-			return (v1,v2);
+			mutable edgeArr = getAllEdges(adjMat);
+			mutable retArr = new Int[Length(edgeArr)];
+			using (input = Qubit[Length(edgeArr)])
+			{
+				HTransform(input);
+				mutable complexity = ToDouble(Length(edgeArr));
+				mutable iterations = Round(Sqrt(complexity));
+				for(count in 0..iterations)
+				{
+				    oracleQueryAreEdges(edgeArr,input);
+					GD(input); //Grover diffusion
+				}
+				set retArr = MeasureResults(input);
+			}
+			return (retArr);
 		}
 	}
 	//attempts to find third vertex of connected to an edge
@@ -66,31 +76,6 @@ namespace Quantum.TriangleProblemProject
 		}
 	}
 	//TODO -returns index of triangle vertices
-	operation findTriangle(adjMat : Int[][]) : (Int,Int,Int) 
-	{
-		body
-		{
-			
-			
-			return (1,2,3);
-		}
-	}
-	//a blackbox-like query to an oracle that sets to One if the input
-	//is an edge
-	operation oracleQueryIfEdge(adjMat : Int[][],ver1: Int,ver2: Int,q : Qubit) : ()
-	{
-		body
-		{
-			if(adjMat[ver1][ver2]==1)
-			{
-				setQubitToOne(q);
-			}
-			
-		}
-	}
-	
-	//an oracle query that sets to One f the inputted edge and point
-	//form a triangle
 	operation oracleQueryIfTriangle(adjMat : Int[][],edge1 : Int,edge2: Int,qArray : Qubit[]) : ()
 	{
 		body
@@ -113,6 +98,45 @@ namespace Quantum.TriangleProblemProject
 				}
 			}
 			
+		}
+	}
+	//a blackbox-like query to an oracle that sets to One if the input
+	//is an edge
+	operation oracleQueryAreEdges(edgeMat : Int[],qArray : Qubit[]) : ()
+	{
+		body
+		{
+			for(count in 0..(Length(edgeMat)-1))
+			{
+				if(edgeMat[count]== 1)
+				{
+					setQubitToOne(qArray[count]);
+				}
+				else
+				{
+					setQubitToZero(qArray[count]);
+				}
+			}
+			
+			
+		}
+	}
+	//an oracle query that sets to One f the inputted edge and point
+	//form a triangle
+	//TODO -returns index of triangle vertices
+	operation findTriangle(adjMat : Int[][]) : (Int,Int,Int) 
+	{
+		body
+		{
+			mutable edges = groverSearchFindEdges(adjMat);
+			for(count in 0..(Length(edges)))
+			{
+				if(edges[count]==1)
+				{
+					//mutable arr = groverSearchFindThirdVer(adjMat);
+				}
+			}
+			return (1,2,3);
 		}
 	}
 	//sets the qubit to one
@@ -190,7 +214,6 @@ namespace Quantum.TriangleProblemProject
 			}
 		}
 	}
-<<<<<<< HEAD
 	operation XTransform(inp : Qubit[]) : ()
 	{
 		body
@@ -238,22 +261,6 @@ namespace Quantum.TriangleProblemProject
 			return retArr;
 		}
 	}
-	operation getUniqueEdges(adjMat : Int[][]) : (Int[])
-	{
-		body
-		{
-		   mutable points = Round(Sqrt(ToDouble(Length(adjMat))));
-		   mutable sizeOfArray = getTriangleNumber(points - 1);
-		   mutable retArr = new Int[sizeOfArray];
-		   for(count in 0..(Length(retArr)-1))
-		   {
-		   	
-		   }
-		   return retArr;
-		   
-		}
-	}
-
 	function getTriangleNumber(N : Int) : (Int)
 	{
 		mutable retVal = 1;
@@ -283,26 +290,22 @@ namespace Quantum.TriangleProblemProject
 			return false;
 		}
 	}
-	
-=======
-
 	operation getAllEdges(adjMat : Int[][]):(Int[])
 	{
 		body
 		{
-			mutable retArr = new Int[((Length(adjMat) * Length(adjMat) - Length(adjMat)) / 2];		// nC2, or (n^2 - n) / 2
+			mutable retArr = new Int[((Length(adjMat) * Length(adjMat)) - Length(adjMat)) / 2];		// nC2, or (n^2 - n) / 2
 			mutable retArrIndex = 0;
 			for (count in 0..(Length(adjMat) - 1))
 			{
 				for (count2 in count + 1..(Length(adjMat) - 1))
 				{
 					set retArr[retArrIndex] = adjMat[count][count2];
-					retArrIndex++;
+					set retArrIndex = retArrIndex + 1;
 				}
 			}
 
 			return retArr;
 		}
 	}
->>>>>>> 67c0899e00b884bf44265818a8fa0b9d5268f94a
 }
