@@ -37,17 +37,24 @@ namespace Quantum.TriangleProblemProject
             g.addVertex("c", getRandColor(), 45, 113);
             g.addVertex("d", getRandColor(), 90, 160);
         }
-        private void Window_Load(object sender, EventArgs e)
-        {
-
-        }
         private void getTriangleInGraph(int[,] adjMat)
         {
             QArray<QArray<long>> inputArray = arrToQArray(adjMat);
             QuantumSimulator sim = new QuantumSimulator();
             var res = decipher.Run(sim, inputArray).Result;
-            int acRes = (int)res;
-            MessageBox.Show(acRes.ToString(),"Result");
+            int[] acRes = qarrToArr(res);
+            MessageBox.Show(arrString(acRes), "Result");
+        }
+        String arrString(int[] inp)
+        {
+            String str = "";
+            for (int i = 0; i < inp.Length; i++)
+                str = str + inp[i];
+            return str;
+        }
+        private void Window_Load(object sender, EventArgs e)
+        {
+
         }
 
         private void runBruteForce(int[,] adjMat) {
@@ -315,7 +322,13 @@ namespace Quantum.TriangleProblemProject
             graphForm.View.Model = myModel;
             graphForm.Show();
         }
-
+        static int[] qarrToArr(QArray<long> arr)
+        {
+            int[] retArr = new int[arr.Count];
+            for (int i = 0; i < retArr.Length; i++)
+                retArr[i] = (int)arr[i];
+            return retArr;
+        }
         //Converts a 2d array to a usable qarray
         public static QArray<QArray<long>> arrToQArray(int[,] input)
         {
