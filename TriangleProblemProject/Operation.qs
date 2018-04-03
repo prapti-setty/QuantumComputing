@@ -30,6 +30,7 @@ namespace Quantum.TriangleProblemProject
 		
 	}
 	//TODO -attempts to find an edge present in a graph
+	//not used
 	operation groverSearchFindEdges(adjMat : Int[][]) :(Int[])
 	{
 		body
@@ -128,7 +129,7 @@ namespace Quantum.TriangleProblemProject
 	{
 		body
 		{
-			mutable edges = groverSearchFindEdges(adjMat);
+			mutable edges = getAllEdges(adjMat);
 			for(count in 0..(Length(edges)-1))
 			{
 				if(edges[count]==1)
@@ -310,6 +311,7 @@ namespace Quantum.TriangleProblemProject
 		}
 		return -1;
 	}
+
 	operation getAllEdges(adjMat : Int[][]):(Int[])
 	{
 		body
@@ -348,10 +350,164 @@ namespace Quantum.TriangleProblemProject
 		{}
 
 		mutable index = position + increase;
-		mutable x = index / position;
-		mutable y = index % position;
+		mutable x = index / size;
+		mutable y = index % size;
 		
 		return (x,y);
+	}
+	function verifyEndResult() : ()
+	{
+	
+
+	}
+
+
+
+
+
+	operation DatabaseOracleFromInts(markedElements : Int[],  markedQubit: Qubit, databaseRegister: Qubit[]) : ()
+    {
+        body {
+            let nMarked = Length(markedElements);
+            for (idxMarked in 0..nMarked - 1) {
+                // Note: As X accepts a Qubit, and ControlledOnInt only 
+                // accepts Qubit[], we use ApplyToEachCA(X, _) which accepts 
+                // Qubit[] even though the target is only 1 Qubit.
+				if (markedElements[idxMarked] == 1)
+				{
+					(ControlledOnInt(idxMarked, ApplyToEachCA(X, _)))(databaseRegister, [markedQubit]);
+				}
+            }
+
+        }	
+        adjoint auto
+        controlled auto
+        adjoint controlled auto
+    }
+
+	operation GroverStatePrepOracleImpl(markedElements : Int[], idxMarkedQubit: Int , startQubits: Qubit[]) : ()
+    {
+        body {
+            let flagQubit = startQubits[idxMarkedQubit];
+            let databaseRegister = Exclude([idxMarkedQubit], startQubits);
+
+            // Apply oracle `U`
+            ApplyToEachCA(H, databaseRegister);
+
+            // Apply oracle `D`
+            DatabaseOracleFromInts(markedElements, flagQubit, databaseRegister);
+
+        }
+
+        adjoint auto
+        controlled auto
+        adjoint controlled auto
+    }
+
+	function GroverStatePrepOracle(markedElements : Int[]) : StateOracle
+    {
+        return StateOracle(GroverStatePrepOracleImpl(markedElements, _, _));
+    }
+
+	function GroverSearch( markedElements: Int[], nIterations: Int, idxMarkedQubit: Int) : (Qubit[] => () : Adjoint, Controlled)
+    {
+        return AmpAmpByOracle(nIterations, GroverStatePrepOracle(markedElements), idxMarkedQubit);
+    }
+
+	operation ApplyGroverSearch( markedElements: Int[], nIterations : Int, nDatabaseQubits : Int) : (Result,Int) {
+        body{
+            // Allocate variables to store measurement results.
+            mutable resultSuccess = Zero;
+            mutable numberElement = 0;
+            
+            // Allocate nDatabaseQubits + 1 qubits. These are all in the |0〉
+            // state.
+            using (qubits = Qubit[nDatabaseQubits+1]) {
+                
+                // Define marked qubit to be indexed by 0.
+                let markedQubit = qubits[0];
+
+                // Let all other qubits be the database register.
+                let databaseRegister = qubits[1..nDatabaseQubits];
+
+                // Implement the quantum search algorithm.
+                (GroverSearch( markedElements, nIterations, 0))(qubits);
+
+                // Measure the marked qubit. On success, this should be One.
+                set resultSuccess = M(markedQubit);
+
+                // Measure the state of the database register post-selected on
+                // the state of the marked qubit.
+                let resultElement = MultiM(databaseRegister);
+
+                set numberElement = PositiveIntFromResultArr(resultElement);
+
+                // These reset all qubits to the |0〉 state, which is required 
+                // before deallocation.
+                ResetAll(qubits);
+            }
+
+            // Returns the measurement results of the algorithm.
+            return (resultSuccess, numberElement);
+        }
+
+	}
+
+
+	operation findTriangleNew(adjMat : Int[][]) : (Int,Int,Int) 
+	{
+		body
+		{
+			mutable edges = getAllEdges(adjMat);
+			mutable repeats = 10;
+			mutable iterations = 3;
+			mutable edgeQubits = getNumOfQubits(Length(edges));
+			mutable vertexQubits = getNumOfQubits(Length(adjMat));
+			mutable resultCheck = One;
+			for(count in 0..repeats)
+			{
+				mutable res = ApplyGroverSearch(edges, iterations, edgeQubits);
+				let (resultSuccess, edge) = res;
+			//Just need to be able to compare the Result type and this will work
+			//	if (resultSuccess == One && edge >= 0)
+			//	{
+			//		mutable location = getLocationInMatrix(edge, Length(adj));
+			//		let (x, y) =location;
+			//		mutable vertexOne = x;
+			//		mutable vertexTwo = y;
+					
+				//	for(count2 in 0..repeats)
+				//	{
+				//		mutable resTwo = ApplyGroverSearch(adj[vertexOne], iterations, vertexQubits);
+				//		let (resultSuccessTwo, vertexThree) = resTwo;
+				//		if (resultSuccessTwo == Result.One && vertexThree != vertexOne && vertexThree != vertexTwo && vertexThree >= 0 && adjMat[vertexTwo][vertexThree] == 1)
+				//		{
+				//			return(vertexOne, vertexTwo, vertexThree);
+				//		}
+				//	}
+					
+
+			//	}
+			}
+			return (-1,-1,-1);
+		}
+	}
+
+	function getNumOfQubits(num : Int) : (Int)
+	{
+		mutable count = 1;
+		mutable res = 0;
+		repeat
+		{
+			set count = count * 2;
+			set res = res + 1;
+		}
+		until(count >= num)
+
+		fixup{}
+
+		return res;
+		
 	}
 
 }
