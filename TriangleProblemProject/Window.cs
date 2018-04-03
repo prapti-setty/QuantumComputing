@@ -22,6 +22,8 @@ namespace Quantum.TriangleProblemProject
 {
     public partial class Window : Form
     {
+        private int iterations = 10;
+        private int repeats = 10;
         private Boolean isSelected = false;
         private int selectedVertex, ctrlVertex = -1;
         int[,] baseMatrix = { { 1, 1 }, { 1, -1 } };
@@ -37,6 +39,8 @@ namespace Quantum.TriangleProblemProject
             g.addVertex("b", getRandColor(), 130, 90);
             g.addVertex("c", getRandColor(), 45, 113);
             g.addVertex("d", getRandColor(), 90, 160);
+            textBox3.Text = "10";
+            textBox4.Text = "10";
         }
         private void getTriangleInGraph(int[,] adjMat)
         {
@@ -85,7 +89,7 @@ namespace Quantum.TriangleProblemProject
         }
         private void Window_Load(object sender, EventArgs e)
         {
-
+            setIcon();
         }
 
         private void runBruteForce(int[,] adjMat) {
@@ -180,17 +184,17 @@ namespace Quantum.TriangleProblemProject
             }
             for (int i = 0; i < g.points.Count; i++)
             {
-                e.Graphics.FillEllipse(g.points[i].brush, new Rectangle(g.points[i].x, g.points[i].y, 10, 10));
+                e.Graphics.FillEllipse(g.points[i].brush, new Rectangle(g.points[i].x, g.points[i].y, 16, 16));
                 e.Graphics.DrawString(g.points[i].idt, new Font(FontFamily.GenericSansSerif,
             9.0F, FontStyle.Bold), Brushes.Black, g.points[i].x + 8, g.points[i].y + 18);
 
             }
             if (selectedVertex >= 0)
-                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[selectedVertex].x - 2,
-                    g.points[selectedVertex].y - 2, 14, 14));
+                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[selectedVertex].x - 3,
+                    g.points[selectedVertex].y - 3, 22, 22));
             if (ctrlVertex >= 0)
-                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[ctrlVertex].x - 2,
-                    g.points[ctrlVertex].y - 2, 14, 14));
+                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[ctrlVertex].x - 3,
+                    g.points[ctrlVertex].y - 3, 22, 22));
         }
 
         private void panel1_MouseClick_1(object sender, MouseEventArgs e)
@@ -252,7 +256,7 @@ namespace Quantum.TriangleProblemProject
         {
             for (int i = 0; i < g.points.Count; i++)
             {
-                Rectangle rect = new Rectangle(g.points[i].x, g.points[i].y, 10, 10);
+                Rectangle rect = new Rectangle(g.points[i].x, g.points[i].y, 16, 16);
                 if (rect.Contains(x, y))
                     return i;
             }
@@ -362,6 +366,30 @@ namespace Quantum.TriangleProblemProject
                 retArr[i] = (int)arr[i];
             return retArr;
         }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            if (Int32.TryParse(textBox3.Text, out iterations) == true)
+                iterations = Int32.Parse(textBox3.Text);
+            else
+                iterations = 10;
+            textBox3.Text = ""+ iterations;
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            if (Int32.TryParse(textBox4.Text, out repeats) == true)
+                repeats = Int32.Parse(textBox4.Text);
+            else
+                repeats = 10;
+            textBox4.Text = "" + repeats;
+        }
+
         //Converts a 2d array to a usable qarray
         public static QArray<QArray<long>> arrToQArray(int[,] input)
         {
@@ -376,6 +404,17 @@ namespace Quantum.TriangleProblemProject
 
             return returnArray;
 
+        }
+
+        private void setIcon()
+        {
+            string dir = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+            string filename = System.IO.Path.Combine(dir, @"Quantum.png");
+            Bitmap b = (Bitmap)Image.FromFile(filename);
+            IntPtr pIcon = b.GetHicon();
+            Icon i = Icon.FromHandle(pIcon);
+            this.Icon = i;
+            i.Dispose();
         }
     }
 
