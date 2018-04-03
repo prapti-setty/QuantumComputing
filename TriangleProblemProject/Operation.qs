@@ -463,34 +463,38 @@ namespace Quantum.TriangleProblemProject
 		{
 			mutable edges = getAllEdges(adjMat);
 			mutable repeats = 10;
-			mutable iterations = 3;
+			mutable iterations = 25;
 			mutable edgeQubits = getNumOfQubits(Length(edges));
 			mutable vertexQubits = getNumOfQubits(Length(adjMat));
 			mutable resultCheck = One;
+
+		//	mutable quantumSuccessProbabilityOne = PowD(Sin((2.0 * iterations + 1.0) * ArcSin(Sqrt(nMarkedElements) / Math.Sqrt(databaseSize))), 2.0);
+		//	mutable quantumSuccessProbabilityTwo = Math.Pow(Math.Sin((2.0 * (double)nIterations + 1.0) * Math.Asin(Math.Sqrt(nMarkedElements) / Math.Sqrt(databaseSize))), 2.0);
+
 			for(count in 0..repeats)
 			{
 				mutable res = ApplyGroverSearch(edges, iterations, edgeQubits);
 				let (resultSuccess, edge) = res;
 			//Just need to be able to compare the Result type and this will work
-			//	if (resultSuccess == One && edge >= 0)
-			//	{
-			//		mutable location = getLocationInMatrix(edge, Length(adj));
-			//		let (x, y) =location;
-			//		mutable vertexOne = x;
-			//		mutable vertexTwo = y;
+				if (resultSuccess != Zero && edge >= 0)
+				{
+					mutable location = getLocationInMatrix(edge, Length(adjMat));
+					let (x, y) =location;
+					mutable vertexOne = x;
+					mutable vertexTwo = y;
 					
-				//	for(count2 in 0..repeats)
-				//	{
-				//		mutable resTwo = ApplyGroverSearch(adj[vertexOne], iterations, vertexQubits);
-				//		let (resultSuccessTwo, vertexThree) = resTwo;
-				//		if (resultSuccessTwo == Result.One && vertexThree != vertexOne && vertexThree != vertexTwo && vertexThree >= 0 && adjMat[vertexTwo][vertexThree] == 1)
-				//		{
-				//			return(vertexOne, vertexTwo, vertexThree);
-				//		}
-				//	}
+					for(count2 in 0..repeats)
+					{
+						mutable resTwo = ApplyGroverSearch(adjMat[vertexOne], iterations, vertexQubits);
+						let (resultSuccessTwo, vertexThree) = resTwo;
+						if (resultSuccessTwo != Zero && vertexThree != vertexOne && vertexThree != vertexTwo && vertexThree >= 0 && adjMat[vertexTwo][vertexThree] == 1)
+						{
+							return(vertexOne, vertexTwo, vertexThree);
+						}
+					}
 					
 
-			//	}
+				}
 			}
 			return (-1,-1,-1);
 		}
