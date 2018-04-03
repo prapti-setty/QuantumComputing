@@ -40,11 +40,41 @@ namespace Quantum.TriangleProblemProject
         }
         private void getTriangleInGraph(int[,] adjMat)
         {
-            QArray<QArray<long>> inputArray = arrToQArray(adjMat);
-            QuantumSimulator sim = new QuantumSimulator();
-            var res = decipher.Run(sim, inputArray).Result;
-            int[] acRes = qarrToArr(res);
-            MessageBox.Show(arrString(acRes), "Result");
+
+            var resCount = 0;
+            var runNum = 1;
+            var bad = 0;
+
+                QArray<QArray<long>> inputArray = arrToQArray(adjMat);
+                QuantumSimulator sim = new QuantumSimulator();
+          //  var res = getAllEdges.Run(sim, inputArray).Result;
+          //  Console.WriteLine(res);
+            for (int i = 0; i < runNum; i++)
+            { 
+                var res = findTriangleNew.Run(sim, inputArray).Result;
+                var (one, two, three) = res;
+                if (one >= 0 && two >= 0 && three >= 0 && one != two && two != three && one != three)
+                {
+                    resCount++;
+                }
+                if (!(one != two && two != three && one != three) && one >= 0 && two >= 0 && three >= 0 )
+                {
+                    bad++;
+                    Console.WriteLine(one + " " + two + " " + three);
+                    Console.ReadLine();
+
+                }
+                MessageBox.Show(one + " " + two + " " + three, "Result");
+            }
+            //       if (resCount > runNum / 10)
+            //       {
+            //           MessageBox.Show("1 " + bad, "Result");
+            //      }
+            //       else
+            //       {
+            //           MessageBox.Show("0 " + bad, "Result");
+            //       }
+
         }
         String arrString(int[] inp)
         {
