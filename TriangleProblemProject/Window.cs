@@ -58,6 +58,8 @@ namespace Quantum.TriangleProblemProject
             { 
                 var resOne = findTriangleNew.Run(sim, inputArray, iterations, repeats).Result;
                 var (one, two, three) = resOne;
+
+
                 if (one >= 0 && two >= 0 && three >= 0 && one != two && two != three && one != three)
                 {
                     resCount++;
@@ -69,7 +71,8 @@ namespace Quantum.TriangleProblemProject
                     Console.ReadLine();
 
                 }
-                MessageBox.Show(one + " " + two + " " + three, "Result");
+                double probability = calculateProbability(iterations, repeats, adjMat);
+                MessageBox.Show(one + " " + two + " " + three + "\nProbability: " + probability, "Result");
             }
             //       if (resCount > runNum / 10)
             //       {
@@ -430,10 +433,14 @@ namespace Quantum.TriangleProblemProject
 
         private static double calculateProbability(int iteration, int repeat, int[,] adjMat)
         {
-            int size = adjMat.Length;
+            int size = adjMat.GetLength(0);
             int[] vertexValues = getAdjacencyValues(adjMat);
             int[] edgesList = getAllEdges(adjMat);
             int edgesSize = edgesList.Length;
+            if (edgesSize <= 0)
+            {
+                return 1;
+            }
             int edgesSum = 0;
             for (int i = 0; i < edgesList.Length; i++)
             {
@@ -481,12 +488,12 @@ namespace Quantum.TriangleProblemProject
 
         private static int[] getAllEdges(int[,] adjMat)
         {
-            int[] retArr = new int[(adjMat.Length * adjMat.Length) - (adjMat.Length) / 2];     // nC2, or (n^2 - n) / 2
+            int[] retArr = new int[(adjMat.GetLength(0) * adjMat.GetLength(0)) - (adjMat.GetLength(0)) / 2];     // nC2, or (n^2 - n) / 2
             int retArrIndex = 0;
 
-            for (int i = 0; i < adjMat.Length; i++)
+            for (int i = 0; i < adjMat.GetLength(0); i++)
             {
-                for (int j = i+1; j < adjMat.Length; j++)
+                for (int j = i+1; j < adjMat.GetLength(0); j++)
                 {
                     retArr[retArrIndex] = adjMat[i,j];
                     retArrIndex = retArrIndex + 1;
@@ -498,11 +505,11 @@ namespace Quantum.TriangleProblemProject
 
         private static int [] getAdjacencyValues(int[,] adjMat)
         {
-            int[] ret = new int[adjMat.Length];
-            for (int i = 0; i < adjMat.Length; i++)
+            int[] ret = new int[adjMat.GetLength(0)];
+            for (int i = 0; i < adjMat.GetLength(0); i++)
             {
                 int sum = 0;
-                for (int j = 0; j < adjMat.Length; j++)
+                for (int j = 0; j < adjMat.GetLength(0); j++)
                 {
                     sum += adjMat[i, j];
                 }
