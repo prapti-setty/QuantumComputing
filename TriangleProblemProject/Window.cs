@@ -22,8 +22,8 @@ namespace Quantum.TriangleProblemProject
 {
     public partial class Window : Form
     {
-        private int iterations = 10;
-        private int repeats = 10;
+        private int iterations = 0;
+        private int repeats = 0;
         private Boolean isSelected = false;
         private int selectedVertex, ctrlVertex = -1;
         int[,] baseMatrix = { { 1, 1 }, { 1, -1 } };
@@ -39,8 +39,8 @@ namespace Quantum.TriangleProblemProject
             g.addVertex("b", getRandColor(), 130, 90);
             g.addVertex("c", getRandColor(), 45, 113);
             g.addVertex("d", getRandColor(), 90, 160);
-            textBox3.Text = "10";
-            textBox4.Text = "10";
+            textBox3.Text = "0";
+            textBox4.Text = "0";
         }
         private void getTriangleInGraph(int[,] adjMat)
         {
@@ -56,7 +56,7 @@ namespace Quantum.TriangleProblemProject
           //  Console.WriteLine(res);
             for (int i = 0; i < runNum; i++)
             { 
-                var resOne = findTriangle.Run(sim, inputArray).Result;
+                var resOne = findTriangleNew.Run(sim, inputArray, iterations, repeats).Result;
                 var (one, two, three) = resOne;
                 if (one >= 0 && two >= 0 && three >= 0 && one != two && two != three && one != three)
                 {
@@ -375,19 +375,30 @@ namespace Quantum.TriangleProblemProject
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             if (Int32.TryParse(textBox3.Text, out iterations) == true)
+            {
                 iterations = Int32.Parse(textBox3.Text);
+                textBox3.Text = "" + iterations;
+            }
             else
-                iterations = 10;
-            textBox3.Text = ""+ iterations;
+            {
+                iterations = 0;
+                textBox3.Text = "" + 0;
+            }
+              
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
             if (Int32.TryParse(textBox4.Text, out repeats) == true)
+            {
                 repeats = Int32.Parse(textBox4.Text);
+                textBox4.Text = "" + repeats;
+            }
             else
-                repeats = 10;
-            textBox4.Text = "" + repeats;
+            {
+                repeats = 0;
+                textBox4.Text = "" + 0;
+            }
         }
 
         //Converts a 2d array to a usable qarray

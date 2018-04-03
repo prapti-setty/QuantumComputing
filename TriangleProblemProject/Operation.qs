@@ -456,13 +456,34 @@ namespace Quantum.TriangleProblemProject
 	}
 
 
-	operation findTriangleNew(adjMat : Int[][]) : (Int,Int,Int) 
+	operation findTriangleNew(adjMat : Int[][],iterationsInp : Int, repeatsInp : Int) : (Int,Int,Int) 
 	{
 		body
 		{
 			mutable edges = getAllEdges(adjMat);
-			mutable repeats = 10;
-			mutable iterations = 25;
+			mutable repeats=1;
+			mutable iterations=1;
+			if (iterationsInp == 0 && repeatsInp == 0)
+			{
+				if (Length(adjMat) >Length(edges))
+				{
+					set repeats = Length(adjMat) * 10;
+				}
+				else
+				{
+					set repeats = Length(edges) * 10;
+				}
+
+				set iterations = Round(Sqrt(ToDouble(Length(edges))))-1;
+				if (iterations == 0)
+				{
+					set iterations = 1;
+				}
+			}
+			else{
+				set repeats = repeatsInp;
+				set iterations = iterationsInp;
+			}
 			mutable edgeQubits = getNumOfQubits(Length(edges));
 			mutable vertexQubits = getNumOfQubits(Length(adjMat));
 			mutable resultCheck = One;
