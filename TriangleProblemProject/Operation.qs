@@ -10,25 +10,7 @@ namespace Quantum.TriangleProblemProject
     open Microsoft.Quantum.Canon;
 	open Microsoft.Quantum.Extensions.Math;
 	open Microsoft.Quantum.Extensions.Convert;
-	//TODO -For testing calls into QSharp
-    operation decipher(instr : Int[][]):(Int[])
-	{
-		
-		body
-		{
-			mutable retArr = new Int[Length(instr)];
-			repeat
-			{
-				set retArr = groverSearchFindThirdVer(instr,0,1);
-				mutable res = isValidResult(retArr);
-			}
-			until(res == true)
-			fixup
-			{}
-			return retArr;	
-		}
-		
-	}
+	
 	//TODO -attempts to find an edge present in a graph
 	//not used
 	operation groverSearchFindEdges(adjMat : Int[][]) :(Int[])
@@ -150,6 +132,22 @@ namespace Quantum.TriangleProblemProject
 			}
 			return (-1,-1,-1);
 		}
+	}
+	operation flipQubit(q : Qubit) : ()
+	{
+		body
+		{
+			let current = M(q);
+			if(current == Zero)
+			{
+				setQubitToOne(q);
+			}
+			else
+			{
+				setQubitToZero(q);
+			}
+		}
+
 	}
 	//sets the qubit to one
 	operation setQubitToOne(q1: Qubit) : ()
@@ -358,6 +356,7 @@ namespace Quantum.TriangleProblemProject
 		
 		return (x,y);
 	}
+
 	function verifyEndResult() : ()
 	{
 	
@@ -516,5 +515,5 @@ namespace Quantum.TriangleProblemProject
 		return res;
 		
 	}
-
+	
 }
