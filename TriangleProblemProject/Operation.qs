@@ -456,34 +456,13 @@ namespace Quantum.TriangleProblemProject
 	}
 
 
-	operation findTriangleNew(adjMat : Int[][],iterationsInp : Int, repeatsInp : Int) : (Int,Int,Int) 
+	operation findTriangleNew(adjMat : Int[][]) : (Int,Int,Int) 
 	{
 		body
 		{
 			mutable edges = getAllEdges(adjMat);
-			mutable repeats=1;
-			mutable iterations=1;
-			if (iterationsInp == 0 && repeatsInp == 0)
-			{
-				if (Length(adjMat) >Length(edges))
-				{
-					set repeats = Length(adjMat) * 10;
-				}
-				else
-				{
-					set repeats = Length(edges) * 10;
-				}
-
-				set iterations = Round(Sqrt(ToDouble(Length(edges))))-1;
-				if (iterations == 0)
-				{
-					set iterations = 1;
-				}
-			}
-			else{
-				set repeats = repeatsInp;
-				set iterations = iterationsInp;
-			}
+			mutable repeats = 10;
+			mutable iterations = 25;
 			mutable edgeQubits = getNumOfQubits(Length(edges));
 			mutable vertexQubits = getNumOfQubits(Length(adjMat));
 			mutable resultCheck = One;
@@ -535,6 +514,13 @@ namespace Quantum.TriangleProblemProject
 
 		return res;
 		
+	}
+
+	public static double calculateProbability(int iterations, int repeats, int edges, int edgesSize, int[,] vertices)
+	{
+		 double successOfFindingAnEdge = Math.Pow(Math.Sin((2.0 * (double)iterations + 1.0) * Math.Asin(Math.Sqrt(edges) / Math.Sqrt(edgesSize))), 2.0);
+		 repeats = 10 * edges;
+
 	}
 	
 }

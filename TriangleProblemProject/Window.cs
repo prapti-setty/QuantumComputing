@@ -427,6 +427,91 @@ namespace Quantum.TriangleProblemProject
             this.Icon = i;
             i.Dispose();
         }
+
+        private static double calculateProbability(int iteration, int repeat, int[,] adjMat)
+        {
+            int size = adjMat.Length;
+            int[] vertexValues = getAdjacencyValues(adjMat);
+            int[] edgesList = getAllEdges(adjMat);
+            int edgesSize = edgesList.Length;
+            int edgesSum = 0;
+            for (int i = 0; i < edgesList.Length; i++)
+            {
+                edgesSum += edgesList[i];
+            }
+            if (iteration == 0 && repeat == 0)
+            {
+                repeat = (size > edgesSum) ? 10 * size : 10 * edgesSum;
+                iteration = (int)Math.Sqrt(edgesSum) - 1;
+                if (iteration == 0)
+                {
+                    iteration = 1;
+                }
+            }
+            double chanceOfFindingAnEdge = Math.Pow(
+                Math.Sin((2.0 * (double)iteration + 1.0)
+                        * Math.Asin(Math.Sqrt(edgesSum) / Math.Sqrt(edgesSize))),
+                2.0);
+
+            double chanceOfFindingEachEdge = 1
+                    - Math.Pow((1 - (chanceOfFindingAnEdge / edgesSum)), repeat);
+
+            double chanceOfFindingAVertex = 0;
+            for (int i = 0; i < vertexValues.Length; i++)
+            {
+                chanceOfFindingAVertex += Math.Pow(
+                        Math.Sin((2.0 * (double)iteration + 1.0) * Math
+                                .Asin(Math.Sqrt(vertexValues[i]) / Math.Sqrt(vertexValues.Length))),
+                        2.0);
+            }
+
+            chanceOfFindingAVertex /= vertexValues.Length;
+
+            double chanceOfFindingEachVertex = 1
+                    - Math.Pow((1 - (chanceOfFindingAVertex / vertexValues.Length)), repeat);
+
+            double chanceOfFindingAnEdgeAndAVertex = chanceOfFindingAnEdge * chanceOfFindingAVertex;
+
+            double chanceOfFindingEachVertexAndEachEdge = chanceOfFindingEachVertex * chanceOfFindingEachEdge;
+
+
+            return chanceOfFindingEachVertexAndEachEdge;
+
+        }
+
+        private static int[] getAllEdges(int[,] adjMat)
+        {
+            int[] retArr = new int[(adjMat.Length * adjMat.Length) - (adjMat.Length) / 2];     // nC2, or (n^2 - n) / 2
+            int retArrIndex = 0;
+
+            for (int i = 0; i < adjMat.Length; i++)
+            {
+                for (int j = i+1; j < adjMat.Length; j++)
+                {
+                    retArr[retArrIndex] = adjMat[i,j];
+                    retArrIndex = retArrIndex + 1;
+                }
+            }
+
+            return retArr;
+        }
+
+        private static int [] getAdjacencyValues(int[,] adjMat)
+        {
+            int[] ret = new int[adjMat.Length];
+            for (int i = 0; i < adjMat.Length; i++)
+            {
+                int sum = 0;
+                for (int j = 0; j < adjMat.Length; j++)
+                {
+                    sum += adjMat[i, j];
+                }
+                ret[i] = sum;
+            }
+            return ret;
+        }
+
+
     }
 
 }
