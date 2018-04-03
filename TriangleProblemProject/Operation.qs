@@ -124,6 +124,11 @@ namespace Quantum.TriangleProblemProject
 			
 		}
 	}
+<<<<<<< Updated upstream
+=======
+	//an oracle query that sets to One if the inputted edge and point
+	//form a triangle
+>>>>>>> Stashed changes
 	//TODO -returns index of triangle vertices
 	operation findTriangle(adjMat : Int[][]) : (Int,Int,Int) 
 	{
@@ -318,6 +323,7 @@ namespace Quantum.TriangleProblemProject
 		{
 			mutable retArr = new Int[((Length(adjMat) * Length(adjMat)) - Length(adjMat)) / 2];		// nC2, or (n^2 - n) / 2
 			mutable retArrIndex = 0;
+
 			for (count in 0..(Length(adjMat) - 1))
 			{
 				for (count2 in count + 1..(Length(adjMat) - 1))
@@ -330,7 +336,11 @@ namespace Quantum.TriangleProblemProject
 			return retArr;
 		}
 	}
+<<<<<<< Updated upstream
 	
+=======
+
+>>>>>>> Stashed changes
 	function getLocationInMatrix(position : Int, size : Int):(Int, Int)
 	{
 
@@ -350,6 +360,7 @@ namespace Quantum.TriangleProblemProject
 		{}
 
 		mutable index = position + increase;
+<<<<<<< Updated upstream
 		mutable x = index / size;
 		mutable y = index % size;
 		
