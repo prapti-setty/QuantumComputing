@@ -311,16 +311,16 @@ namespace Quantum.TriangleProblemProject
 			myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title="Vertex Count", MinorStep=1, MajorStep=1 });
 			myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Time Taken (Relative)" });
 
-            int matrixCount = 100000;
+            int matrixCount = 1;
             int minVertices = 3;
-            int maxVertices = 8;
+            int maxVertices = 4;
             int verticesGap = 1;
 
             List<AlgorithmResults> algorithmResults = new List<AlgorithmResults> {
                 // Repeat brute force a bunch of times, else its times are too small.
                 new AlgorithmResults(() => new BruteForceAlgorithm()),
                 new AlgorithmResults(() => new TraceAlgorithm()),
-                //new AlgorithmResults(() => new QuantumAlgorithm()),
+                new AlgorithmResults(() => new QuantumAlgorithm()),
             };
 
             for (int i = minVertices; i <= maxVertices; i += verticesGap) {

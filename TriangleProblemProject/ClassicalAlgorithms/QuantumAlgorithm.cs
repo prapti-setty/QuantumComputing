@@ -17,7 +17,7 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
 
         public bool Run(int[,] mat) {
             QArray<QArray<long>> inputArray = Window.arrToQArray(mat);
-          //  var res = decipher.Run(_simulator, inputArray).Result;
+            var res = findTriangleNew.Run(_simulator, inputArray,0,0).Result;
             return true;
         }
     }
