@@ -23,16 +23,16 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.SuspendLayout();
-            // 
-            // GraphForm
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(681, 464);
-            this.Name = "GraphForm";
-            this.Load += new System.EventHandler(this.GraphForm_Load);
-            this.ResumeLayout(false);
+			this.SuspendLayout();
+			// 
+			// GraphForm
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(945, 654);
+			this.Name = "GraphForm";
+			this.Load += new System.EventHandler(this.GraphForm_Load);
+			this.ResumeLayout(false);
 
         }
 

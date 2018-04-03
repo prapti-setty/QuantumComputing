@@ -16,6 +16,7 @@ using Quantum.TriangleProblemProject.ClassicalAlgorithms;
 using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
+using OxyPlot.Axes;
 
 namespace Quantum.TriangleProblemProject
 {
@@ -248,33 +249,51 @@ namespace Quantum.TriangleProblemProject
         }
 
         private class AlgorithmResults {
-            // How many matrices to run on.
-            public int MatrixCount = 1;
-            // How many times to repeat the same matrix.
-            public int Repetitions = 1;
-            public IClassicalAlgorithm Algorithm;
-            public double MaxTime;
-            public List<double> Times = new List<double>();
+			public Func<IClassicalAlgorithm> AlgorithmConstructor;
+			public long MaxTime;
+            public List<long> MaxTimes = new List<long>();
+            public List<long> Times = new List<long>();
 
-            public AlgorithmResults(IClassicalAlgorithm algorithm) {
-                Algorithm = algorithm;
+            public AlgorithmResults(Func<IClassicalAlgorithm> algorithmConstructor) {
+                AlgorithmConstructor = algorithmConstructor;
             }
 
-            public void AddTime(double time) {
-                Times.Add(time);
-                MaxTime = Math.Max(MaxTime, time);
+			public void AddNewTime() {
+				Times.Add(0);
+				MaxTimes.Add(0);
+			}
+
+            public void AddTime(long time) {
+				Times[Times.Count - 1] += time;
+				MaxTimes[MaxTimes.Count - 1] = Math.Max(MaxTimes[MaxTimes.Count - 1], time);
+				MaxTime = Math.Max(MaxTime, Times[Times.Count - 1]);
             }
-        }
+		}
 
         private void btnGraph_Click(object sender, EventArgs e) {
-            var myModel = new PlotModel { Title = "Results" };
-            Dictionary<int, List<int[,]>> matrices = new Dictionary<int, List<int[,]>>();
-            int matrixCount = 50;
-            int minVertices = 100;
-            int maxVertices = 1000;
-            int verticesGap = 100;
+            var myModel = new PlotModel {
+				Title = "Results",
+			};
+			myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title="Vertex Count", MinorStep=1, MajorStep=1 });
+			myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Time Taken (Relative)" });
+
+            int matrixCount = 100000;
+            int minVertices = 3;
+            int maxVertices = 8;
+            int verticesGap = 1;
+
+            List<AlgorithmResults> algorithmResults = new List<AlgorithmResults> {
+                // Repeat brute force a bunch of times, else its times are too small.
+                new AlgorithmResults(() => new BruteForceAlgorithm()),
+                new AlgorithmResults(() => new TraceAlgorithm()),
+                //new AlgorithmResults(() => new QuantumAlgorithm()),
+            };
+
             for (int i = minVertices; i <= maxVertices; i += verticesGap) {
-                List<int[,]> matrixList = new List<int[,]>();
+				foreach (AlgorithmResults result in algorithmResults) {
+					result.AddNewTime();
+				}
+
                 for (int matrixI = 0; matrixI < matrixCount; matrixI++) {
                     int[,] matrix = new int[i, i];
                     for (int j = 0; j < i; j++) {
@@ -286,37 +305,21 @@ namespace Quantum.TriangleProblemProject
                         }
                     }
 
-                    matrixList.Add(matrix);
-                }
-
-                matrices[i] = matrixList;
-            }
-
-            List<AlgorithmResults> algorithms = new List<AlgorithmResults> {
-                // Repeat brute force a bunch of times, else its times are too small.
-                new AlgorithmResults(new BruteForceAlgorithm()) { MatrixCount = matrixCount, Repetitions = 1000 },
-                new AlgorithmResults(new TraceAlgorithm()),
-                new AlgorithmResults(new QuantumAlgorithm()) { MatrixCount = matrixCount },
-            };
-
-            foreach (var algorithm in algorithms) {
-                for (int vertices = minVertices; vertices <= maxVertices; vertices += verticesGap) {
-                    var matrixList = matrices[vertices];
-                    Stopwatch watch = Stopwatch.StartNew();
-                    for (int i = 0; i < algorithm.MatrixCount; i++) {
-                        for (int j = 0; j < algorithm.Repetitions; j++) {
-                            algorithm.Algorithm.Run(matrixList[i]);
-                        }
-                    }
-                    algorithm.AddTime(watch.ElapsedMilliseconds);
+					// Run each algorithm on this matrix.
+					foreach (AlgorithmResults result in algorithmResults) {
+						IClassicalAlgorithm algorithm = result.AlgorithmConstructor();
+						Stopwatch watch = Stopwatch.StartNew();
+						algorithm.Run(matrix);
+						result.AddTime(watch.ElapsedTicks);
+					}
                 }
             }
 
-            foreach (var algorithm in algorithms) {
+            foreach (var result in algorithmResults) {
                 myModel.Series.Add(new FunctionSeries((x => {
                     int timeIndex = (int)(x - minVertices) / verticesGap;
-                    return algorithm.Times[timeIndex] / algorithm.MaxTime;
-                }), minVertices, maxVertices, (double)verticesGap, algorithm.Algorithm.Name));
+                    return (double)result.Times[timeIndex] / result.MaxTime;
+                }), minVertices, maxVertices, (double)verticesGap, result.AlgorithmConstructor().Name));
             }
             GraphForm graphForm = new GraphForm();
             graphForm.View.Model = myModel;
