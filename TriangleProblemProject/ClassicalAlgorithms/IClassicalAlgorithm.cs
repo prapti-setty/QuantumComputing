@@ -22,5 +22,6 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
         /// </summary>
         /// <param name="mat">The adjacency matrix of the graph.</param>
         bool Run(int[,] mat);
+        (int,int,int)  getTriangle(int[,] mat);
     }
 }

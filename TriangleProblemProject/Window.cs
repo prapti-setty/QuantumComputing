@@ -17,6 +17,7 @@ using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using OxyPlot.Axes;
+using System.Timers;
 
 namespace Quantum.TriangleProblemProject
 {
@@ -24,6 +25,7 @@ namespace Quantum.TriangleProblemProject
     {
         private int iterations = 0;
         private int repeats = 0;
+        private int currentTriangleA, currentTriangleB, currentTriangleC = -1;
         private Boolean isSelected = false;
         private int selectedVertex, ctrlVertex = -1;
         int[,] baseMatrix = { { 1, 1 }, { 1, -1 } };
@@ -42,28 +44,20 @@ namespace Quantum.TriangleProblemProject
             textBox3.Text = "0";
             textBox4.Text = "0";
         }
-        private void getTriangleInGraph(int[,] adjMat)
+        private void runQuantum(int[,] adjMat)
         {
 
 
             var resCount = 0;
             var runNum = 1;
             var bad = 0;
-
-                QArray<QArray<long>> inputArray = arrToQArray(adjMat);
-                QuantumSimulator sim = new QuantumSimulator();
-          //  var res = getAllEdges.Run(sim, inputArray).Result;
-          //  Console.WriteLine(res);
+            QuantumAlgorithm quantumAlgorithm = new QuantumAlgorithm();
             for (int i = 0; i < runNum; i++)
             { 
-                var resOne = findTriangleNew.Run(sim, inputArray, iterations, repeats).Result;
+                var resOne = quantumAlgorithm.getTriangle(adjMat);
                 var (one, two, three) = resOne;
-
-
                 if (one >= 0 && two >= 0 && three >= 0 && one != two && two != three && one != three)
-                {
                     resCount++;
-                }
                 if (!(one != two && two != three && one != three) && one >= 0 && two >= 0 && three >= 0 )
                 {
                     bad++;
@@ -72,7 +66,9 @@ namespace Quantum.TriangleProblemProject
 
                 }
                 double probability = calculateProbability(iterations, repeats, adjMat);
-                MessageBox.Show(one + " " + two + " " + three + "\nProbability: " + probability, "Result");
+                setTriangle(one, two, three);
+                Refresh();
+             //   MessageBox.Show(one + " " + two + " " + three + "\nProbability: " + probability, "Result");
             }
             //       if (resCount > runNum / 10)
             //       {
@@ -82,6 +78,11 @@ namespace Quantum.TriangleProblemProject
             //       {
             //           MessageBox.Show("0 " + bad, "Result");
             //       }
+        }
+        void displayTriangle(int one, int two, int three)
+        {
+
+
         }
         String arrString(int[] inp)
         {
@@ -124,19 +125,16 @@ namespace Quantum.TriangleProblemProject
             stopwatch.Start();
             if (quantumRadioButton.Checked)
             {
-                getTriangleInGraph(g.getAdjMat());
-                Console.WriteLine("Quantum Algorithm");
+                runQuantum(g.getAdjMat());
             }
             else if (bruteForceRadioButton.Checked)
             {
                 runBruteForce(g.getAdjMat());
-                Console.WriteLine("Brute Force Algorithm");
             } else {
                 runTrace(g.getAdjMat());
-                Console.WriteLine("Trace Algorithm");
             }
             stopwatch.Stop();
-            Console.WriteLine("Time elapsed (ms): {0}", stopwatch.Elapsed.TotalMilliseconds);
+            
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -181,7 +179,19 @@ namespace Quantum.TriangleProblemProject
                 for (int j = 0; j < i; j++)
                 {
                     if (g.getAdjMat()[i, j] == 1)
-                        e.Graphics.DrawLine(Pens.Black, g.points[i].x + 5, g.points[i].y + 5, g.points[j].x + 5, g.points[j].y + 5);
+                    {
+                        Pen curPen = Pens.Black;
+                        if ((i == currentTriangleA || i == currentTriangleB || i == currentTriangleC) &&
+                                (j == currentTriangleA || j == currentTriangleB || j == currentTriangleC))
+                        {
+                            curPen = new Pen(Brushes.Red);
+                            curPen.Width = 4.0F;    
+                        }
+            
+                            
+                        e.Graphics.DrawLine(curPen, g.points[i].x + 5, g.points[i].y + 5, g.points[j].x + 5, g.points[j].y + 5);
+                    }
+                        
 
                 }
             }
@@ -374,7 +384,27 @@ namespace Quantum.TriangleProblemProject
         {
 
         }
-
+        private void setTriangle(long a, long b, long c)
+        {
+            System.Timers.Timer aTimer = new System.Timers.Timer();
+            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            // Set the Interval to 1 second.
+            currentTriangleA = (int)a;
+            currentTriangleB = (int)b;
+            currentTriangleC = (int)c;
+            Refresh();
+            aTimer.Interval = 5000;
+            aTimer.Enabled = true;
+        }
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            currentTriangleA = -1;
+            currentTriangleB = -1;
+            currentTriangleC = -1;
+            this.Invoke((MethodInvoker)delegate {
+                updateGUILab.Text = "";
+            }); ;
+        }
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             if (Int32.TryParse(textBox3.Text, out iterations) == true)
@@ -419,7 +449,7 @@ namespace Quantum.TriangleProblemProject
             return returnArray;
 
         }
-
+        
         private void setIcon()
         {
             string dir = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
@@ -485,7 +515,6 @@ namespace Quantum.TriangleProblemProject
             return chanceOfFindingEachVertexAndEachEdge;
 
         }
-
         private static int[] getAllEdges(int[,] adjMat)
         {
             int[] retArr = new int[(adjMat.GetLength(0) * adjMat.GetLength(0)) - (adjMat.GetLength(0)) / 2];     // nC2, or (n^2 - n) / 2

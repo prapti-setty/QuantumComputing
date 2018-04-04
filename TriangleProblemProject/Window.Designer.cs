@@ -46,11 +46,13 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.updateGUILab = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Window;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Location = new System.Drawing.Point(167, 26);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(668, 440);
@@ -176,7 +178,7 @@
             // btnGraph
             // 
             this.btnGraph.Location = new System.Drawing.Point(10, 323);
-            this.btnGraph.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGraph.Margin = new System.Windows.Forms.Padding(2);
             this.btnGraph.Name = "btnGraph";
             this.btnGraph.Size = new System.Drawing.Size(91, 30);
             this.btnGraph.TabIndex = 12;
@@ -229,11 +231,20 @@
             this.label5.TabIndex = 0;
             this.label5.Text = "Quantum Settings";
             // 
+            // updateGUILab
+            // 
+            this.updateGUILab.AutoSize = true;
+            this.updateGUILab.Location = new System.Drawing.Point(802, 7);
+            this.updateGUILab.Name = "updateGUILab";
+            this.updateGUILab.Size = new System.Drawing.Size(0, 13);
+            this.updateGUILab.TabIndex = 13;
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(847, 478);
+            this.Controls.Add(this.updateGUILab);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.textBox3);
@@ -280,5 +291,6 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label updateGUILab;
     }
 }
