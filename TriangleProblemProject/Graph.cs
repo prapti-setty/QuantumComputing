@@ -103,6 +103,10 @@ namespace Quantum.TriangleProblemProject
                 this.x = x;
                 this.y = y;
             }
+            public string getName()
+            {
+                return idt;
+            }
 
 
         }

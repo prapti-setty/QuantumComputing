@@ -43,11 +43,12 @@ namespace Quantum.TriangleProblemProject
             g.addVertex("d", getRandColor(), 90, 160);
             textBox3.Text = "0";
             textBox4.Text = "0";
+            richTextBox1.ReadOnly = true;
         }
         private void runQuantum(int[,] adjMat)
         {
 
-
+            writeMessage("Running Quantum Algorithm");
             var resCount = 0;
             var runNum = 1;
             var bad = 0;
@@ -67,6 +68,12 @@ namespace Quantum.TriangleProblemProject
                 }
                 double probability = calculateProbability(iterations, repeats, adjMat);
                 setTriangle(one, two, three);
+                writeMessage("Finding with probability: " + probability);
+                if (one == -1)
+                    writeMessage("No Triangle Found");
+                else
+                    writeMessage("Triangle Found at: " + g.points[one].getName() + ", " + g.points[two].getName()
+                        + ", " + g.points[three].getName());
                 Refresh();
              //   MessageBox.Show(one + " " + two + " " + three + "\nProbability: " + probability, "Result");
             }
@@ -78,6 +85,10 @@ namespace Quantum.TriangleProblemProject
             //       {
             //           MessageBox.Show("0 " + bad, "Result");
             //       }
+        }
+        private void writeMessage(string str)
+        {
+            richTextBox1.Text = richTextBox1.Text + "=> " + str+ "...\n";
         }
         void displayTriangle(int one, int two, int three)
         {
@@ -97,15 +108,31 @@ namespace Quantum.TriangleProblemProject
         }
 
         private void runBruteForce(int[,] adjMat) {
+            writeMessage("Running Brute Force");
             BruteForceAlgorithm algorithm = new BruteForceAlgorithm();
-            bool result = algorithm.Run(adjMat);
-            MessageBox.Show(result.ToString());
+            var result = algorithm.getTriangle(adjMat);
+            var (one, two, three) = result;
+            setTriangle(one, two, three);
+            if (one == -1)
+                writeMessage("No Triangle Found");
+            else
+                writeMessage("Triangle Found at: " + g.points[one].getName()+ ", " + g.points[two].getName()
+                    + ", " + g.points[three].getName());
+            Refresh();
         }
 
         private void runTrace(int[,] adjMat) {
+            writeMessage("Running Trace");
             TraceAlgorithm algorithm = new TraceAlgorithm();
-            bool result = algorithm.Run(adjMat);
-            MessageBox.Show(result.ToString());
+            var result = algorithm.getTriangle(adjMat);
+            var (one, two, three) = result;
+            setTriangle(one, two, three);
+            if (one == -1)
+                writeMessage("No Triangle Found");
+            else
+                writeMessage("Triangle Found at: " + g.points[one].getName()+ ", " + g.points[two].getName()
+                    + ", " + g.points[three].getName());
+            Refresh();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -123,6 +150,7 @@ namespace Quantum.TriangleProblemProject
             // Create new stopwatch
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+            richTextBox1.Text = "";
             if (quantumRadioButton.Checked)
             {
                 runQuantum(g.getAdjMat());
@@ -133,6 +161,7 @@ namespace Quantum.TriangleProblemProject
             } else {
                 runTrace(g.getAdjMat());
             }
+            writeMessage("Time Elapsed: " + stopwatch.Elapsed);
             stopwatch.Stop();
             
         }
@@ -459,6 +488,11 @@ namespace Quantum.TriangleProblemProject
             Icon i = Icon.FromHandle(pIcon);
             this.Icon = i;
             i.Dispose();
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
 
         private static double calculateProbability(int iteration, int repeat, int[,] adjMat)
