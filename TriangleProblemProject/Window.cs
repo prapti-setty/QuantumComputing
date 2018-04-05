@@ -62,7 +62,7 @@ namespace Quantum.TriangleProblemProject
                 var (one, two, three) = resOne;
                 if (one >= 0 && two >= 0 && three >= 0 && one != two && two != three && one != three)
                     resCount++;
-                if (!(one != two && two != three && one != three) && one >= 0 && two >= 0 && three >= 0 )
+                if (!(one != two && two != three && one != three) && one >= 0 && two >= 0 && three >= 0)
                 {
                     bad++;
                     Console.WriteLine(one + " " + two + " " + three);
@@ -78,7 +78,7 @@ namespace Quantum.TriangleProblemProject
                     writeMessage("Triangle Found at: " + g.points[one].getName() + ", " + g.points[two].getName()
                         + ", " + g.points[three].getName());
                 Refresh();
-             //   MessageBox.Show(one + " " + two + " " + three + "\nProbability: " + probability, "Result");
+                //   MessageBox.Show(one + " " + two + " " + three + "\nProbability: " + probability, "Result");
             }
             //       if (resCount > runNum / 10)
             //       {
@@ -91,7 +91,7 @@ namespace Quantum.TriangleProblemProject
         }
         private void writeMessage(string str)
         {
-            richTextBox1.Text = richTextBox1.Text + "=> " + str+ "...\n";
+            richTextBox1.Text = richTextBox1.Text + "=> " + str + "...\n";
         }
         void displayTriangle(int one, int two, int three)
         {
@@ -110,7 +110,8 @@ namespace Quantum.TriangleProblemProject
             setIcon();
         }
 
-        private void runBruteForce(int[,] adjMat) {
+        private void runBruteForce(int[,] adjMat)
+        {
             writeMessage("Running Brute Force");
             BruteForceAlgorithm algorithm = new BruteForceAlgorithm();
             var result = algorithm.getTriangle(adjMat);
@@ -119,12 +120,13 @@ namespace Quantum.TriangleProblemProject
             if (one == -1)
                 writeMessage("No Triangle Found");
             else
-                writeMessage("Triangle Found at: " + g.points[one].getName()+ ", " + g.points[two].getName()
+                writeMessage("Triangle Found at: " + g.points[one].getName() + ", " + g.points[two].getName()
                     + ", " + g.points[three].getName());
             Refresh();
         }
 
-        private void runTrace(int[,] adjMat) {
+        private void runTrace(int[,] adjMat)
+        {
             writeMessage("Running Trace");
             TraceAlgorithm algorithm = new TraceAlgorithm();
             bool result = algorithm.Run(adjMat);
@@ -158,12 +160,14 @@ namespace Quantum.TriangleProblemProject
             else if (bruteForceRadioButton.Checked)
             {
                 runBruteForce(g.getAdjMat());
-            } else {
+            }
+            else
+            {
                 runTrace(g.getAdjMat());
             }
             writeMessage("Time Elapsed: " + stopwatch.Elapsed);
             stopwatch.Stop();
-            
+
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -214,12 +218,12 @@ namespace Quantum.TriangleProblemProject
                                 (j == currentTriangleA || j == currentTriangleB || j == currentTriangleC))
                         {
                             curPen = new Pen(Brushes.Red);
-                            curPen.Width = 4.0F;    
+                            curPen.Width = 4.0F;
                         }
                          e.Graphics.DrawLine(curPen, g.points[i].x + (CIRCLE_SIZE/2), g.points[i].y 
                        + (CIRCLE_SIZE / 2), g.points[j].x + (CIRCLE_SIZE / 2), g.points[j].y + (CIRCLE_SIZE / 2));
                     }
-                        
+
 
                 }
             }
@@ -312,7 +316,7 @@ namespace Quantum.TriangleProblemProject
 
         private void quantumRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-       
+
         }
 
         private void resetButton_Click(object sender, EventArgs e)
@@ -323,34 +327,40 @@ namespace Quantum.TriangleProblemProject
             Refresh();
         }
 
-        private class AlgorithmResults {
-			public Func<IClassicalAlgorithm> AlgorithmConstructor;
-			public long MaxTime;
+        private class AlgorithmResults
+        {
+            public Func<IClassicalAlgorithm> AlgorithmConstructor;
+            public long MaxTime;
             public List<long> MaxTimes = new List<long>();
             public List<long> Times = new List<long>();
 
-            public AlgorithmResults(Func<IClassicalAlgorithm> algorithmConstructor) {
+            public AlgorithmResults(Func<IClassicalAlgorithm> algorithmConstructor)
+            {
                 AlgorithmConstructor = algorithmConstructor;
             }
 
-			public void AddNewTime() {
-				Times.Add(0);
-				MaxTimes.Add(0);
-			}
-
-            public void AddTime(long time) {
-				Times[Times.Count - 1] += time;
-				MaxTimes[MaxTimes.Count - 1] = Math.Max(MaxTimes[MaxTimes.Count - 1], time);
-				MaxTime = Math.Max(MaxTime, Times[Times.Count - 1]);
+            public void AddNewTime()
+            {
+                Times.Add(0);
+                MaxTimes.Add(0);
             }
-		}
 
-        private void btnGraph_Click(object sender, EventArgs e) {
-            var myModel = new PlotModel {
-				Title = "Results",
-			};
-			myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title="Vertex Count", MinorStep=1, MajorStep=1 });
-			myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Time Taken (Relative)" });
+            public void AddTime(long time)
+            {
+                Times[Times.Count - 1] += time;
+                MaxTimes[MaxTimes.Count - 1] = Math.Max(MaxTimes[MaxTimes.Count - 1], time);
+                MaxTime = Math.Max(MaxTime, Times[Times.Count - 1]);
+            }
+        }
+
+        private void btnGraph_Click(object sender, EventArgs e)
+        {
+            var myModel = new PlotModel
+            {
+                Title = "Results",
+            };
+            myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Vertex Count", MinorStep = 1, MajorStep = 1 });
+            myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Time Taken (Relative)" });
 
             int matrixCount = 1;
             int minVertices = 3;
@@ -364,34 +374,43 @@ namespace Quantum.TriangleProblemProject
                 new AlgorithmResults(() => new QuantumAlgorithm()),
             };
 
-            for (int i = minVertices; i <= maxVertices; i += verticesGap) {
-				foreach (AlgorithmResults result in algorithmResults) {
-					result.AddNewTime();
-				}
+            for (int i = minVertices; i <= maxVertices; i += verticesGap)
+            {
+                foreach (AlgorithmResults result in algorithmResults)
+                {
+                    result.AddNewTime();
+                }
 
-                for (int matrixI = 0; matrixI < matrixCount; matrixI++) {
+                for (int matrixI = 0; matrixI < matrixCount; matrixI++)
+                {
                     int[,] matrix = new int[i, i];
-                    for (int j = 0; j < i; j++) {
-                        for (int k = j + 1; k < i; k++) {
-                            if (randGen.NextDouble() < 0.2) {
+                    for (int j = 0; j < i; j++)
+                    {
+                        for (int k = j + 1; k < i; k++)
+                        {
+                            if (randGen.NextDouble() < 0.2)
+                            {
                                 matrix[j, k] = 1;
                                 matrix[k, j] = 1;
                             }
                         }
                     }
 
-					// Run each algorithm on this matrix.
-					foreach (AlgorithmResults result in algorithmResults) {
-						IClassicalAlgorithm algorithm = result.AlgorithmConstructor();
-						Stopwatch watch = Stopwatch.StartNew();
-						algorithm.Run(matrix);
-						result.AddTime(watch.ElapsedTicks);
-					}
+                    // Run each algorithm on this matrix.
+                    foreach (AlgorithmResults result in algorithmResults)
+                    {
+                        IClassicalAlgorithm algorithm = result.AlgorithmConstructor();
+                        Stopwatch watch = Stopwatch.StartNew();
+                        algorithm.Run(matrix);
+                        result.AddTime(watch.ElapsedTicks);
+                    }
                 }
             }
 
-            foreach (var result in algorithmResults) {
-                myModel.Series.Add(new FunctionSeries((x => {
+            foreach (var result in algorithmResults)
+            {
+                myModel.Series.Add(new FunctionSeries((x =>
+                {
                     int timeIndex = (int)(x - minVertices) / verticesGap;
                     return (double)result.Times[timeIndex] / result.MaxTime;
                 }), minVertices, maxVertices, (double)verticesGap, result.AlgorithmConstructor().Name));
@@ -429,7 +448,8 @@ namespace Quantum.TriangleProblemProject
             currentTriangleA = -1;
             currentTriangleB = -1;
             currentTriangleC = -1;
-            this.Invoke((MethodInvoker)delegate {
+            this.Invoke((MethodInvoker)delegate
+            {
                 updateGUILab.Text = "";
             }); ;
         }
@@ -445,7 +465,7 @@ namespace Quantum.TriangleProblemProject
                 iterations = 0;
                 textBox3.Text = "" + 0;
             }
-              
+
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
@@ -477,7 +497,7 @@ namespace Quantum.TriangleProblemProject
             return returnArray;
 
         }
-        
+
         private void setIcon()
         {
             string dir = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
@@ -496,10 +516,13 @@ namespace Quantum.TriangleProblemProject
 
         private static double calculateProbability(int iteration, int repeat, int[,] adjMat)
         {
-            int size = (int) Math.Pow(2, getNumOfQubitsUsed( adjMat.GetLength(0)));
+
+            // (1 - (P(E) * (1-P(V) / x) ^ n) / x) ^ n
+            int size = (int)Math.Pow(2, getNumOfQubitsUsed(adjMat.GetLength(0)));
             int[] vertexValues = getAdjacencyValues(adjMat);
             int[] edgesList = getAllEdges(adjMat);
-            int edgesSize = (int) Math.Pow(2, getNumOfQubitsUsed( edgesList.Length));
+            int edgesSize = (int)Math.Pow(2, getNumOfQubitsUsed(edgesList.Length));
+            int vertexSize = (int)Math.Pow(2, getNumOfQubitsUsed(vertexValues.Length));
             if (edgesSize <= 0)
             {
                 return 1;
@@ -527,17 +550,16 @@ namespace Quantum.TriangleProblemProject
                     - Math.Pow((1 - (chanceOfFindingAnEdge / edgesSum)), repeat);
 
             double chanceOfFindingAVertex = 0;
-            double totSum = 0;
             for (int i = 0; i < vertexValues.Length; i++)
             {
-                chanceOfFindingAVertex += (edgesSize - (i + 1)) * Math.Pow(
+                chanceOfFindingAVertex += (edgesList.Length - (i + 1)) * Math.Pow(
                         Math.Sin((2.0 * (double)iteration + 1.0) * Math
-                                .Asin(Math.Sqrt(vertexValues[i]) / Math.Sqrt(vertexValues.Length))),
+                                .Asin(Math.Sqrt(vertexValues[i]) / Math.Sqrt(vertexSize))),
                         2.0);
-                totSum += (edgesSize - (i + 1));
+               
             }
 
-            chanceOfFindingAVertex /= totSum;
+            chanceOfFindingAVertex = chanceOfFindingAVertex / edgesSize;
 
             double chanceOfFindingEachVertex = 1
                     - Math.Pow((1 - (chanceOfFindingAVertex / vertexValues.Length)), repeat);
@@ -547,19 +569,30 @@ namespace Quantum.TriangleProblemProject
             double chanceOfFindingEachVertexAndEachEdge = chanceOfFindingEachVertex * chanceOfFindingEachEdge;
 
 
-            return chanceOfFindingEachVertexAndEachEdge;
+            double chanceOfFindingAnEdgeAndEachVertex = chanceOfFindingEachVertex * chanceOfFindingAnEdge;
+            double chanceOfFindingEachEdgeAndEachVertex = 1 - Math.Pow(1 - (chanceOfFindingAnEdgeAndEachVertex / edgesSum), repeat);
+
+            Console.WriteLine("Chance of finding an edge: " + chanceOfFindingAnEdge + "/n");
+            Console.WriteLine("Chance of finding each edge: " + chanceOfFindingEachEdge + "/n");
+            Console.WriteLine("Chance of finding a vertex: " + chanceOfFindingAVertex + "/n");
+            Console.WriteLine("Chance of finding edge and vertex: " + chanceOfFindingAnEdgeAndAVertex + "/n");
+            Console.WriteLine("Chance of finding each vertex: " + chanceOfFindingEachVertex + "/n");
+            Console.WriteLine("Chance of finding each edge and vertex: " + chanceOfFindingEachVertexAndEachEdge + "/n");
+
+            return chanceOfFindingAnEdgeAndEachVertex;
 
         }
         private static int[] getAllEdges(int[,] adjMat)
         {
-            int[] retArr = new int[(adjMat.GetLength(0) * adjMat.GetLength(0)) - (adjMat.GetLength(0)) / 2];     // nC2, or (n^2 - n) / 2
+            int x = adjMat.GetLength(0);
+            int[] retArr = new int[((adjMat.GetLength(0) * adjMat.GetLength(0)) - adjMat.GetLength(0)) / 2];     // nC2, or (n^2 - n) / 2
             int retArrIndex = 0;
 
             for (int i = 0; i < adjMat.GetLength(0); i++)
             {
-                for (int j = i+1; j < adjMat.GetLength(0); j++)
+                for (int j = i + 1; j < adjMat.GetLength(0); j++)
                 {
-                    retArr[retArrIndex] = adjMat[i,j];
+                    retArr[retArrIndex] = adjMat[i, j];
                     retArrIndex = retArrIndex + 1;
                 }
             }
@@ -567,7 +600,7 @@ namespace Quantum.TriangleProblemProject
             return retArr;
         }
 
-        private static int [] getAdjacencyValues(int[,] adjMat)
+        private static int[] getAdjacencyValues(int[,] adjMat)
         {
             int[] ret = new int[adjMat.GetLength(0)];
             for (int i = 0; i < adjMat.GetLength(0); i++)
@@ -583,10 +616,10 @@ namespace Quantum.TriangleProblemProject
         }
 
         private static int getNumOfQubitsUsed(int num)
-	    {
+        {
             int count = 1;
             int res = 0;
-            while(count < num)
+            while (count < num)
             {
                 count = count * 2;
                 res += 1;
