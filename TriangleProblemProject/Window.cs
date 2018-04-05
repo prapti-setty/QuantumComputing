@@ -497,10 +497,10 @@ namespace Quantum.TriangleProblemProject
 
         private static double calculateProbability(int iteration, int repeat, int[,] adjMat)
         {
-            int size = adjMat.GetLength(0);
+            int size = (int) Math.Pow(2, getNumOfQubitsUsed( adjMat.GetLength(0)));
             int[] vertexValues = getAdjacencyValues(adjMat);
             int[] edgesList = getAllEdges(adjMat);
-            int edgesSize = edgesList.Length;
+            int edgesSize = (int) Math.Pow(2, getNumOfQubitsUsed( edgesList.Length));
             if (edgesSize <= 0)
             {
                 return 1;
@@ -528,15 +528,17 @@ namespace Quantum.TriangleProblemProject
                     - Math.Pow((1 - (chanceOfFindingAnEdge / edgesSum)), repeat);
 
             double chanceOfFindingAVertex = 0;
+            double totSum = 0;
             for (int i = 0; i < vertexValues.Length; i++)
             {
-                chanceOfFindingAVertex += Math.Pow(
+                chanceOfFindingAVertex += (edgesSize - (i + 1)) * Math.Pow(
                         Math.Sin((2.0 * (double)iteration + 1.0) * Math
                                 .Asin(Math.Sqrt(vertexValues[i]) / Math.Sqrt(vertexValues.Length))),
                         2.0);
+                totSum += (edgesSize - (i + 1));
             }
 
-            chanceOfFindingAVertex /= vertexValues.Length;
+            chanceOfFindingAVertex /= totSum;
 
             double chanceOfFindingEachVertex = 1
                     - Math.Pow((1 - (chanceOfFindingAVertex / vertexValues.Length)), repeat);
@@ -579,6 +581,19 @@ namespace Quantum.TriangleProblemProject
                 ret[i] = sum;
             }
             return ret;
+        }
+
+        private static int getNumOfQubitsUsed(int num)
+	    {
+            int count = 1;
+            int res = 0;
+            while(count < num)
+            {
+                count = count * 2;
+                res += 1;
+            }
+            return res;
+
         }
 
 
