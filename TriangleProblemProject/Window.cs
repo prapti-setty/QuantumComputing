@@ -1,4 +1,4 @@
-﻿//Window.cs by Isaac Walker
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,6 +28,8 @@ namespace Quantum.TriangleProblemProject
         private int currentTriangleA, currentTriangleB, currentTriangleC = -1;
         private Boolean isSelected = false;
         private int selectedVertex, ctrlVertex = -1;
+        private static readonly int CIRCLE_SIZE = 16;
+        private static readonly int OFFSET_SIZE = 3;
         int[,] baseMatrix = { { 1, 1 }, { 1, -1 } };
         Random randGen;
         Graph g;
@@ -55,7 +57,8 @@ namespace Quantum.TriangleProblemProject
             QuantumAlgorithm quantumAlgorithm = new QuantumAlgorithm();
             for (int i = 0; i < runNum; i++)
             { 
-                var resOne = quantumAlgorithm.getTriangle(adjMat);
+                var resOne = quantumAlgorithm.getTriangle(adjMat,iterations,repeats);
+                MessageBox.Show(iterations + " " + repeats);
                 var (one, two, three) = resOne;
                 if (one >= 0 && two >= 0 && three >= 0 && one != two && two != three && one != three)
                     resCount++;
@@ -124,14 +127,11 @@ namespace Quantum.TriangleProblemProject
         private void runTrace(int[,] adjMat) {
             writeMessage("Running Trace");
             TraceAlgorithm algorithm = new TraceAlgorithm();
-            var result = algorithm.getTriangle(adjMat);
-            var (one, two, three) = result;
-            setTriangle(one, two, three);
-            if (one == -1)
+            bool result = algorithm.Run(adjMat);
+            if (result == false)
                 writeMessage("No Triangle Found");
             else
-                writeMessage("Triangle Found at: " + g.points[one].getName()+ ", " + g.points[two].getName()
-                    + ", " + g.points[three].getName());
+                writeMessage("Triangle Found!");
             Refresh();
         }
 
@@ -216,9 +216,8 @@ namespace Quantum.TriangleProblemProject
                             curPen = new Pen(Brushes.Red);
                             curPen.Width = 4.0F;    
                         }
-            
-                            
-                        e.Graphics.DrawLine(curPen, g.points[i].x + 5, g.points[i].y + 5, g.points[j].x + 5, g.points[j].y + 5);
+                         e.Graphics.DrawLine(curPen, g.points[i].x + (CIRCLE_SIZE/2), g.points[i].y 
+                       + (CIRCLE_SIZE / 2), g.points[j].x + (CIRCLE_SIZE / 2), g.points[j].y + (CIRCLE_SIZE / 2));
                     }
                         
 
@@ -226,17 +225,17 @@ namespace Quantum.TriangleProblemProject
             }
             for (int i = 0; i < g.points.Count; i++)
             {
-                e.Graphics.FillEllipse(g.points[i].brush, new Rectangle(g.points[i].x, g.points[i].y, 16, 16));
+                e.Graphics.FillEllipse(g.points[i].brush, new Rectangle(g.points[i].x, g.points[i].y, CIRCLE_SIZE, CIRCLE_SIZE));
                 e.Graphics.DrawString(g.points[i].idt, new Font(FontFamily.GenericSansSerif,
             9.0F, FontStyle.Bold), Brushes.Black, g.points[i].x + 8, g.points[i].y + 18);
 
             }
             if (selectedVertex >= 0)
                 e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[selectedVertex].x - 3,
-                    g.points[selectedVertex].y - 3, 22, 22));
+                    g.points[selectedVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2*OFFSET_SIZE), CIRCLE_SIZE + (2*OFFSET_SIZE)));
             if (ctrlVertex >= 0)
                 e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[ctrlVertex].x - 3,
-                    g.points[ctrlVertex].y - 3, 22, 22));
+                    g.points[ctrlVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2 * OFFSET_SIZE), CIRCLE_SIZE + (2 * OFFSET_SIZE)));
         }
 
         private void panel1_MouseClick_1(object sender, MouseEventArgs e)
@@ -298,7 +297,7 @@ namespace Quantum.TriangleProblemProject
         {
             for (int i = 0; i < g.points.Count; i++)
             {
-                Rectangle rect = new Rectangle(g.points[i].x, g.points[i].y, 16, 16);
+                Rectangle rect = new Rectangle(g.points[i].x, g.points[i].y, CIRCLE_SIZE, CIRCLE_SIZE);
                 if (rect.Contains(x, y))
                     return i;
             }
