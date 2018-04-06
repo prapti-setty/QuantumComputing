@@ -231,6 +231,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.RadioButton traceRadioButton;
+        private System.Windows.Forms.RadioButton StrassenRadioButton;
         private System.Windows.Forms.Button btnGraph;
     }
 }

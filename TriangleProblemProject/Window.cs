@@ -61,6 +61,12 @@ namespace Quantum.TriangleProblemProject
             bool result = algorithm.Run(adjMat);
             MessageBox.Show(result.ToString());
         }
+        private void runStrassen(int[,] adjMat)
+        {
+            StrassenAlgorithm algorithm = new StrassenAlgorithm();
+            bool result = algorithm.Run(adjMat);
+            MessageBox.Show(result.ToString());
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -289,6 +295,7 @@ namespace Quantum.TriangleProblemProject
                 // Repeat brute force a bunch of times, else its times are too small.
                 new AlgorithmResults(new BruteForceAlgorithm()) { MatrixCount = matrixCount, Repetitions = 1000 },
                 new AlgorithmResults(new TraceAlgorithm()),
+                new AlgorithmResults(new StrassenAlgorithm()),
                 new AlgorithmResults(new QuantumAlgorithm()) { MatrixCount = matrixCount },
             };
 
