@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Math.Log;
-using Math.Pow;
+
 
 namespace Quantum.TriangleProblemProject.ClassicalAlgorithms
 {
@@ -17,21 +16,23 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms
     /// 
     /// This is efficient for dense graphs, with time complexity of O(n^2.373 or O(n^log2(7)), a mild improvement over standard matrix multication.
     /// </summary>
-    interface StrassenAlgorithm
+    class StrassenAlgorithm : IAlgorithm
     {
         /// <summary>
         /// Name of the algorithm.
         /// </summary>
-        string Name { get; }
+
+        string IAlgorithm.Name => "Strassens Algorithm";
+
         /// <summary>
         /// Run the algorithm. Return whether there is a triangle in the graph.
         /// </summary>
         /// <param name="mat">The adjacency matrix of the graph.</param>
-        bool Run(int[,] mat)
+        public bool Run(int[,] mat)
         {
             //int boolResult = 0;
             int trace = 0;
-            int nodes = mat.GetLength();
+            int nodes = mat.GetLength(0);
             // if nodes ==2 then its a standard trival matrix multiplication scenario (or trace algorithm)
             if (nodes == 2)
             {
@@ -47,7 +48,7 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms
             {
                 // Find the Highest Square Matrix of size 2^n * 2^n, where n == nodes
                 double logOfNodes = Math.Log(2.0, nodes);
-                int squareMatrixDimension = Math.Pow(2, Math.Ceiling(logOfNodes));
+                int squareMatrixDimension = (int)Math.Pow(2.0, Math.Ceiling(logOfNodes));
                 int[,] resizedMatrix = new int[squareMatrixDimension, squareMatrixDimension];
                 for (int col = 0; col < nodes; col++)
                 {
@@ -56,8 +57,8 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms
                         resizedMatrix[row, col] = mat[row, col];
                     }
                 }
-                int[,] mat1 = StrassenAlgorithm(mat, mat);
-                int[,] mat2 = StrassenAlgorithm(mat2, mat);
+                int[,] mat1 = StrassensAlgorithm(mat, mat);
+                int[,] mat2 = StrassensAlgorithm(mat1, mat);
                 for (int i = 0; i < nodes; i++)
                 {
                     trace += mat2[i, i];
@@ -69,14 +70,14 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms
         public int[,] StrassensAlgorithm(int[,] A, int[,] B)
         {
             // DO NOT INPUT MATRICES OF SIZE <= 2
-            if (A.Length == 2)
+            if (A.GetLength(0) == 2)
             {
                 return MatrixMultiply(2, A, B);
             }
             else
             {
                 // initialisation of new matrices
-                int halfLength = A.Length / 2;
+                int halfLength = A.GetLength(0) / 2;
                 int[,] a11 = new int[halfLength, halfLength];
                 int[,] a12 = new int[halfLength, halfLength];
                 int[,] a21 = new int[halfLength, halfLength];
@@ -119,7 +120,7 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms
                 bResult = StrassensAlgorithm(b21, b11); // b21 - b11
                 int[,] p4 = StrassensAlgorithm(a22, bResult);
                 // p4 = (a22) * (b21 - b11)
-                aResult = add(a11, a12); // a11 + a12
+                aResult = MatrixAddition(a11, a12); // a11 + a12
                 int[,] p5 = StrassensAlgorithm(aResult, b22);
                 // p5 = (a11+a12) * (b22)
                 aResult = MatrixSubtraction(a21, a11); // a21 - a11
@@ -142,72 +143,74 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms
                 int[,] c22 = MatrixSubtraction(bResult, p2);
                 // c22 = p1 + p3 - p2 + p6
                 // Grouping the results obtained in a single matrix:
-                int[,] C = new int[A.Length, A.Length];
+                int[,] C = new int[A.GetLength(0), A.GetLength(0)];
                 for (int i = 0; i < halfLength; i++) {
                     for (int j = 0; j < halfLength; j++) {
-                        C[i][j] = c11[i][j];
-                        C[i][j + halfLength] = c12[i][j];
-                        C[i + halfLength][j] = c21[i][j];
-                        C[i + halfLength][j + halfLength] = c22[i][j];
+                        C[i,j] = c11[i,j];
+                        C[i,j + halfLength] = c12[i,j];
+                        C[i + halfLength,j] = c21[i,j];
+                        C[i + halfLength,j + halfLength] = c22[i,j];
                     }
                 }
                 return C;
             }
-            //public int[,] createSubmatrix
-
-
-            // for finding vertices for GUI purposes
-            public (int, int, int) getTriangleStrassen(int[,] mat)
+    }
+        //public int[,] createSubmatrix
+        // standard ikj multiplication of matrices
+        int[,] MatrixMultiply(int size, int[,] mat1, int[,] mat2)
+        {
+            int[,] result = new int[size, size];
+            for (int i = 0; i < size; i++)
             {
-                return new BruteForceAlgorithm().getTriangle(mat);
-            }
-            // standard ikj multiplication of matrices
-            int[,] MatrixMultiply(int size, int[,] mat1, int[,] mat2)
-            {
-                int[,] result = new int[size, size];
-                for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
                 {
-                    for (int j = 0; j < size; j++)
+                    int value = 0;
+                    for (int k = 0; k < size; k++)
                     {
-                        int value = 0;
-                        for (int k = 0; k < size; k++)
-                        {
-                            value += mat1[i, k] * mat2[k, j];
-                        }
+                        value += mat1[i, k] * mat2[k, j];
+                    }
 
-                        result[i, j] = value;
-                    }
+                    result[i, j] = value;
                 }
+            }
 
-                return result;
-            }
-            int[,] MatrixAddition(int size, int[,] mat1, int[,] mat2)
+            return result;
+        }
+        int[,] MatrixAddition(int[,] mat1, int[,] mat2)
+        {
+            int n = mat1.GetLength(0);
+            int[,] mat3 = new int[n, n];
+            for (int i = 0; i < n; i++)
             {
-                int n = mat1.length;
-                int[,] mat3 = new int[n, n];
-                for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
                 {
-                    for (int j = 0; j < n; j++)
-                    {
-                        mat3[i, j] = mat1[i, j] + mat2[i, j];
-                    }
+                    mat3[i, j] = mat1[i, j] + mat2[i, j];
                 }
-                return mat3;
             }
-            int[,] MatrixSubtraction(int size, int[,] mat1, int[,] mat2)
+            return mat3;
+        }
+        int[,] MatrixSubtraction(int[,] mat1, int[,] mat2)
+        {
+            int n = mat1.GetLength(0);
+            int[,] mat3 = new int[n, n];
+            for (int i = 0; i < n; i++)
             {
-                int n = mat1.length;
-                int[,] mat3 = new int[n, n];
-                for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
                 {
-                    for (int j = 0; j < n; j++)
-                    {
-                        mat3[i, j] = mat1[i, j] + mat2[i, j];
-                    }
+                    mat3[i, j] = mat1[i, j] + mat2[i, j];
                 }
-                return mat3;
             }
+            return mat3;
+        }
+        bool IAlgorithm.Run(int[,] mat)
+        {
+            return Run(mat);
+        }
+
+        public (int, int, int) getTriangle(int[,] mat)
+        {
+           return new BruteForceAlgorithm().getTriangle(mat);
         }
     }
 }
-}
+
