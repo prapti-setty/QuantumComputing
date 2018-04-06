@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
-    public class QuantumAlgorithm : IClassicalAlgorithm {
+    public class QuantumAlgorithm : IAlgorithm {
         private QuantumSimulator _simulator;
         public string Name => "Quantum";
 

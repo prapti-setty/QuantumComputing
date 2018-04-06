@@ -12,7 +12,7 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
     /// to the same testing methods, using this interface. Also, recursive algorithms
     /// can make use of class fields
     /// </summary>
-    interface IClassicalAlgorithm {
+    interface IAlgorithm {
         /// <summary>
         /// Name of the algorithm.
         /// </summary>
