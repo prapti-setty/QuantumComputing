@@ -10,7 +10,7 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
     /// Runtime for this algorithim is O(n^3)
 
     /// </summary>
-    public class TraceAlgorithm : IClassicalAlgorithm {
+    public class TraceAlgorithm : IAlgorithm {
         public string Name => "Trace of Matrix";
 
         public bool Run(int[,] mat) {

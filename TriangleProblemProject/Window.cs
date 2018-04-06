@@ -30,7 +30,6 @@ namespace Quantum.TriangleProblemProject
         private int selectedVertex, ctrlVertex = -1;
         private static readonly int CIRCLE_SIZE = 16;
         private static readonly int OFFSET_SIZE = 3;
-        int[,] baseMatrix = { { 1, 1 }, { 1, -1 } };
         Random randGen;
         Graph g;
         public Window()
@@ -56,9 +55,8 @@ namespace Quantum.TriangleProblemProject
             var bad = 0;
             QuantumAlgorithm quantumAlgorithm = new QuantumAlgorithm();
             for (int i = 0; i < runNum; i++)
-            { 
-                var resOne = quantumAlgorithm.getTriangle(adjMat,iterations,repeats);
-                MessageBox.Show(iterations + " " + repeats);
+            {
+                var resOne = quantumAlgorithm.getTriangle(adjMat, iterations, repeats);
                 var (one, two, three) = resOne;
                 if (one >= 0 && two >= 0 && three >= 0 && one != two && two != three && one != three)
                     resCount++;
@@ -78,16 +76,7 @@ namespace Quantum.TriangleProblemProject
                     writeMessage("Triangle Found at: " + g.points[one].getName() + ", " + g.points[two].getName()
                         + ", " + g.points[three].getName());
                 Refresh();
-                //   MessageBox.Show(one + " " + two + " " + three + "\nProbability: " + probability, "Result");
             }
-            //       if (resCount > runNum / 10)
-            //       {
-            //           MessageBox.Show("1 " + bad, "Result");
-            //      }
-            //       else
-            //       {
-            //           MessageBox.Show("0 " + bad, "Result");
-            //       }
         }
         private void writeMessage(string str)
         {
@@ -136,12 +125,6 @@ namespace Quantum.TriangleProblemProject
                 writeMessage("Triangle Found!");
             Refresh();
         }
-        private void runStrassen(int[,] adjMat)
-        {
-            StrassenAlgorithm algorithm = new StrassenAlgorithm();
-            bool result = algorithm.Run(adjMat);
-            MessageBox.Show(result.ToString());
-        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -183,13 +166,8 @@ namespace Quantum.TriangleProblemProject
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            //   Refresh();
-
+         
         }
-
-
-
-
         private Brush getRandColor()
         {
             int rand = randGen.Next(0, 6);
@@ -226,8 +204,8 @@ namespace Quantum.TriangleProblemProject
                             curPen = new Pen(Brushes.Red);
                             curPen.Width = 4.0F;
                         }
-                         e.Graphics.DrawLine(curPen, g.points[i].x + (CIRCLE_SIZE/2), g.points[i].y 
-                       + (CIRCLE_SIZE / 2), g.points[j].x + (CIRCLE_SIZE / 2), g.points[j].y + (CIRCLE_SIZE / 2));
+                        e.Graphics.DrawLine(curPen, g.points[i].x + (CIRCLE_SIZE / 2), g.points[i].y
+                      + (CIRCLE_SIZE / 2), g.points[j].x + (CIRCLE_SIZE / 2), g.points[j].y + (CIRCLE_SIZE / 2));
                     }
 
 
@@ -237,14 +215,14 @@ namespace Quantum.TriangleProblemProject
             {
                 e.Graphics.FillEllipse(g.points[i].brush, new Rectangle(g.points[i].x, g.points[i].y, CIRCLE_SIZE, CIRCLE_SIZE));
                 e.Graphics.DrawString(g.points[i].idt, new Font(FontFamily.GenericSansSerif,
-            9.0F, FontStyle.Bold), Brushes.Black, g.points[i].x + 8, g.points[i].y + 18);
+            9.0F, FontStyle.Bold), Brushes.Black, g.points[i].x + (CIRCLE_SIZE / 2), g.points[i].y + (CIRCLE_SIZE + OFFSET_SIZE));
 
             }
             if (selectedVertex >= 0)
-                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[selectedVertex].x - 3,
-                    g.points[selectedVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2*OFFSET_SIZE), CIRCLE_SIZE + (2*OFFSET_SIZE)));
+                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[selectedVertex].x - OFFSET_SIZE,
+                    g.points[selectedVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2 * OFFSET_SIZE), CIRCLE_SIZE + (2 * OFFSET_SIZE)));
             if (ctrlVertex >= 0)
-                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[ctrlVertex].x - 3,
+                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[ctrlVertex].x - OFFSET_SIZE,
                     g.points[ctrlVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2 * OFFSET_SIZE), CIRCLE_SIZE + (2 * OFFSET_SIZE)));
         }
 
@@ -335,12 +313,12 @@ namespace Quantum.TriangleProblemProject
 
         private class AlgorithmResults
         {
-            public Func<IClassicalAlgorithm> AlgorithmConstructor;
+            public Func<IAlgorithm> AlgorithmConstructor;
             public long MaxTime;
             public List<long> MaxTimes = new List<long>();
             public List<long> Times = new List<long>();
 
-            public AlgorithmResults(Func<IClassicalAlgorithm> algorithmConstructor)
+            public AlgorithmResults(Func<IAlgorithm> algorithmConstructor)
             {
                 AlgorithmConstructor = algorithmConstructor;
             }
@@ -402,37 +380,13 @@ namespace Quantum.TriangleProblemProject
                         }
                     }
 
-<<<<<<< HEAD
-                    matrixList.Add(matrix);
-                }
-
-                matrices[i] = matrixList;
-            }
-
-            List<AlgorithmResults> algorithms = new List<AlgorithmResults> {
-                // Repeat brute force a bunch of times, else its times are too small.
-                new AlgorithmResults(new BruteForceAlgorithm()) { MatrixCount = matrixCount, Repetitions = 1000 },
-                new AlgorithmResults(new TraceAlgorithm()),
-                new AlgorithmResults(new QuantumAlgorithm()) { MatrixCount = matrixCount },
-            };
-
-            foreach (var algorithm in algorithms) {
-                for (int vertices = minVertices; vertices <= maxVertices; vertices += verticesGap) {
-                    var matrixList = matrices[vertices];
-                    Stopwatch watch = Stopwatch.StartNew();
-                    for (int i = 0; i < algorithm.MatrixCount; i++) {
-                        for (int j = 0; j < algorithm.Repetitions; j++) {
-                            algorithm.Algorithm.Run(matrixList[i]);
-                        }
-=======
                     // Run each algorithm on this matrix.
                     foreach (AlgorithmResults result in algorithmResults)
                     {
-                        IClassicalAlgorithm algorithm = result.AlgorithmConstructor();
+                        IAlgorithm algorithm = result.AlgorithmConstructor();
                         Stopwatch watch = Stopwatch.StartNew();
                         algorithm.Run(matrix);
                         result.AddTime(watch.ElapsedTicks);
->>>>>>> a9cf6a203457e711abab5877582dde2789fd04db
                     }
                 }
             }
@@ -586,7 +540,7 @@ namespace Quantum.TriangleProblemProject
                         Math.Sin((2.0 * (double)iteration + 1.0) * Math
                                 .Asin(Math.Sqrt(vertexValues[i]) / Math.Sqrt(vertexSize))),
                         2.0);
-               
+
             }
 
             chanceOfFindingAVertex = chanceOfFindingAVertex / edgesSize;
@@ -602,12 +556,12 @@ namespace Quantum.TriangleProblemProject
             double chanceOfFindingAnEdgeAndEachVertex = chanceOfFindingEachVertex * chanceOfFindingAnEdge;
             double chanceOfFindingEachEdgeAndEachVertex = 1 - Math.Pow(1 - (chanceOfFindingAnEdgeAndEachVertex / edgesSum), repeat);
 
-            Console.WriteLine("Chance of finding an edge: " + chanceOfFindingAnEdge + "/n");
+           /* Console.WriteLine("Chance of finding an edge: " + chanceOfFindingAnEdge + "/n");
             Console.WriteLine("Chance of finding each edge: " + chanceOfFindingEachEdge + "/n");
             Console.WriteLine("Chance of finding a vertex: " + chanceOfFindingAVertex + "/n");
             Console.WriteLine("Chance of finding edge and vertex: " + chanceOfFindingAnEdgeAndAVertex + "/n");
             Console.WriteLine("Chance of finding each vertex: " + chanceOfFindingEachVertex + "/n");
-            Console.WriteLine("Chance of finding each edge and vertex: " + chanceOfFindingEachVertexAndEachEdge + "/n");
+            Console.WriteLine("Chance of finding each edge and vertex: " + chanceOfFindingEachVertexAndEachEdge + "/n");*/
 
             return chanceOfFindingAnEdgeAndEachVertex;
 
