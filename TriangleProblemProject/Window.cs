@@ -136,6 +136,12 @@ namespace Quantum.TriangleProblemProject
                 writeMessage("Triangle Found!");
             Refresh();
         }
+        private void runStrassen(int[,] adjMat)
+        {
+            StrassenAlgorithm algorithm = new StrassenAlgorithm();
+            bool result = algorithm.Run(adjMat);
+            MessageBox.Show(result.ToString());
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -396,6 +402,29 @@ namespace Quantum.TriangleProblemProject
                         }
                     }
 
+<<<<<<< HEAD
+                    matrixList.Add(matrix);
+                }
+
+                matrices[i] = matrixList;
+            }
+
+            List<AlgorithmResults> algorithms = new List<AlgorithmResults> {
+                // Repeat brute force a bunch of times, else its times are too small.
+                new AlgorithmResults(new BruteForceAlgorithm()) { MatrixCount = matrixCount, Repetitions = 1000 },
+                new AlgorithmResults(new TraceAlgorithm()),
+                new AlgorithmResults(new QuantumAlgorithm()) { MatrixCount = matrixCount },
+            };
+
+            foreach (var algorithm in algorithms) {
+                for (int vertices = minVertices; vertices <= maxVertices; vertices += verticesGap) {
+                    var matrixList = matrices[vertices];
+                    Stopwatch watch = Stopwatch.StartNew();
+                    for (int i = 0; i < algorithm.MatrixCount; i++) {
+                        for (int j = 0; j < algorithm.Repetitions; j++) {
+                            algorithm.Algorithm.Run(matrixList[i]);
+                        }
+=======
                     // Run each algorithm on this matrix.
                     foreach (AlgorithmResults result in algorithmResults)
                     {
@@ -403,6 +432,7 @@ namespace Quantum.TriangleProblemProject
                         Stopwatch watch = Stopwatch.StartNew();
                         algorithm.Run(matrix);
                         result.AddTime(watch.ElapsedTicks);
+>>>>>>> a9cf6a203457e711abab5877582dde2789fd04db
                     }
                 }
             }
