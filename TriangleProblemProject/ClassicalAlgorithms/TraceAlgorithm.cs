@@ -25,7 +25,10 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
 
             return trace != 0;
         }
-
+        public (int,int,int) getTriangle(int[,] mat)
+        {
+            return new BruteForceAlgorithm().getTriangle(mat);
+        }
         private int[,] Multiply(int size, int[,] mat1, int[,] mat2) {
             int[,] result = new int[size, size];
             for (int i = 0; i < size; i++) {

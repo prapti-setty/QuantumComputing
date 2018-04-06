@@ -103,15 +103,19 @@ namespace Quantum.TriangleProblemProject
                 this.x = x;
                 this.y = y;
             }
+            public string getName()
+            {
+                return idt;
+            }
 
 
         }
         //classical implementation of triangle finding algorithm
-        public (int,int,int) findTriangleBruteForce()
+        public (int, int, int) findTriangleBruteForce()
         {
-            for(int i=0;i<adjMatrix.GetLength(0);i++)
+            for (int i = 0; i < adjMatrix.GetLength(0); i++)
             {
-                for(int j=0;j<adjMatrix.GetLength(0);j++)
+                for (int j = 0; j < adjMatrix.GetLength(0); j++)
                 {
 
                 }
@@ -119,5 +123,5 @@ namespace Quantum.TriangleProblemProject
             return (1, 2, 3);
         }
     }
-   }
+}
 

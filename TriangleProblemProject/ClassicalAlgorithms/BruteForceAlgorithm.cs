@@ -11,7 +11,7 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
     public class BruteForceAlgorithm : IClassicalAlgorithm {
         public string Name => "Brute Force";
 
-        public bool Run(int[,] mat) {
+        public (int,int,int) getTriangle(int[,] mat) {
             int nodes = mat.GetLength(0);
             for (int i = 0; i < nodes; i++) {
                 for (int j = i+1; j < nodes; j++) {
@@ -19,14 +19,20 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
                     if (mat[i,j] == 1) {
                         for (int k = j+1; k < nodes; k++) {
                             if (mat[i,k] == 1 && mat[j,k] == 1) {
-                                return true;
+                                return (i,j,k);
                             }
                         }
                     }
                 }
             }
 
-            return false;
+            return (-1,-1,-1);
+        }
+        public bool Run(int[,] mat)
+        {
+            var retVals = getTriangle(mat);
+            var (valOne, valTwo, valThree) = retVals;
+            return (valOne != -1);
         }
     }
 }

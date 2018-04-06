@@ -16,9 +16,23 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
         }
 
         public bool Run(int[,] mat) {
+            var testVals = getTriangle(mat);
+            var (valOne, valTwo, valThree) = testVals;
+            return (valOne != -1);
+
+        }
+
+        public (int, int, int) getTriangle(int[,] mat)
+        {
+            
+            return getTriangle(mat,0,0);
+        }
+        public (int, int, int) getTriangle(int[,] mat,int iterations, int repeats)
+        {
             QArray<QArray<long>> inputArray = Window.arrToQArray(mat);
-            var res = decipher.Run(_simulator, inputArray).Result;
-            return res > 0;
+            var res = findTriangleNew.Run(_simulator, inputArray, iterations, repeats).Result;
+            var (retOne, retTwo, retThree) = res;
+            return ((int)retOne, (int)retTwo, (int)retThree);
         }
     }
 }
