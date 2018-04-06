@@ -11,7 +11,6 @@ namespace Quantum.TriangleProblemProject
 	open Microsoft.Quantum.Extensions.Math;
 	open Microsoft.Quantum.Extensions.Convert;
 	
-	//TODO -attempts to find an edge present in a graph
 	//not used
 	operation groverSearchFindEdges(adjMat : Int[][]) :(Int[])
 	{
@@ -60,7 +59,6 @@ namespace Quantum.TriangleProblemProject
 			return retArr;
 		}
 	}
-	//TODO -returns index of triangle vertices
 	operation oracleQueryIfTriangle(adjMat : Int[][],edge1 : Int,edge2: Int,qArray : Qubit[]) : ()
 	{
 		body
@@ -108,7 +106,6 @@ namespace Quantum.TriangleProblemProject
 	}
 	//an oracle query that sets to One if the inputted edge and point
 	//form a triangle
-	//TODO -returns index of triangle vertices
 	operation findTriangle(adjMat : Int[][]) : (Int,Int,Int) 
 	{
 		body
@@ -363,10 +360,6 @@ namespace Quantum.TriangleProblemProject
 
 	}
 
-
-
-
-
 	operation DatabaseOracleFromInts(markedElements : Int[],  markedQubit: Qubit, databaseRegister: Qubit[]) : ()
     {
         body {
@@ -474,11 +467,27 @@ namespace Quantum.TriangleProblemProject
 					set repeats = Length(edges) * 10;
 				}
 
-				set iterations = Round(Sqrt(ToDouble(Length(edges))))-1;
+				mutable marked = 0;
+
+				for (i in 0..Length(edges) - 1)
+				{
+					if (edges[i] == 1)
+					{
+						set marked = marked + 1;
+					}
+				}
+
+				set iterations = Round(Sqrt(ToDouble(Length(edges) / marked)))-1;
 				if (iterations == 0)
 				{
 					set iterations = 1;
 				}
+				if (Length(edges) == marked)
+				{
+					set iterations = 2;
+				}
+
+
 			}
 			else{
 				set repeats = repeatsInp;
@@ -487,9 +496,6 @@ namespace Quantum.TriangleProblemProject
 			mutable edgeQubits = getNumOfQubits(Length(edges));
 			mutable vertexQubits = getNumOfQubits(Length(adjMat));
 			mutable resultCheck = One;
-
-		//	mutable quantumSuccessProbabilityOne = PowD(Sin((2.0 * iterations + 1.0) * ArcSin(Sqrt(nMarkedElements) / Math.Sqrt(databaseSize))), 2.0);
-		//	mutable quantumSuccessProbabilityTwo = Math.Pow(Math.Sin((2.0 * (double)nIterations + 1.0) * Math.Asin(Math.Sqrt(nMarkedElements) / Math.Sqrt(databaseSize))), 2.0);
 
 			for(count in 0..repeats)
 			{
@@ -534,7 +540,5 @@ namespace Quantum.TriangleProblemProject
 		fixup{}
 
 		return res;
-		
 	}
-	
 }

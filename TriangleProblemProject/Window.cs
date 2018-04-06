@@ -56,8 +56,8 @@ namespace Quantum.TriangleProblemProject
             var bad = 0;
             QuantumAlgorithm quantumAlgorithm = new QuantumAlgorithm();
             for (int i = 0; i < runNum; i++)
-            { 
-                var resOne = quantumAlgorithm.getTriangle(adjMat,iterations,repeats);
+            {
+                var resOne = quantumAlgorithm.getTriangle(adjMat, iterations, repeats);
                 MessageBox.Show(iterations + " " + repeats);
                 var (one, two, three) = resOne;
                 if (one >= 0 && two >= 0 && three >= 0 && one != two && two != three && one != three)
@@ -69,25 +69,19 @@ namespace Quantum.TriangleProblemProject
                     Console.ReadLine();
 
                 }
+                // This code would be for if we could calcuate the probability correctly
+                /*
                 double probability = calculateProbability(iterations, repeats, adjMat);
                 setTriangle(one, two, three);
                 writeMessage("Finding with probability: " + probability);
+                */
                 if (one == -1)
                     writeMessage("No Triangle Found");
                 else
                     writeMessage("Triangle Found at: " + g.points[one].getName() + ", " + g.points[two].getName()
                         + ", " + g.points[three].getName());
                 Refresh();
-                //   MessageBox.Show(one + " " + two + " " + three + "\nProbability: " + probability, "Result");
             }
-            //       if (resCount > runNum / 10)
-            //       {
-            //           MessageBox.Show("1 " + bad, "Result");
-            //      }
-            //       else
-            //       {
-            //           MessageBox.Show("0 " + bad, "Result");
-            //       }
         }
         private void writeMessage(string str)
         {
@@ -170,20 +164,6 @@ namespace Quantum.TriangleProblemProject
 
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
-            //   Refresh();
-
-        }
-
-
-
-
         private Brush getRandColor()
         {
             int rand = randGen.Next(0, 6);
@@ -220,8 +200,8 @@ namespace Quantum.TriangleProblemProject
                             curPen = new Pen(Brushes.Red);
                             curPen.Width = 4.0F;
                         }
-                         e.Graphics.DrawLine(curPen, g.points[i].x + (CIRCLE_SIZE/2), g.points[i].y 
-                       + (CIRCLE_SIZE / 2), g.points[j].x + (CIRCLE_SIZE / 2), g.points[j].y + (CIRCLE_SIZE / 2));
+                        e.Graphics.DrawLine(curPen, g.points[i].x + (CIRCLE_SIZE / 2), g.points[i].y
+                      + (CIRCLE_SIZE / 2), g.points[j].x + (CIRCLE_SIZE / 2), g.points[j].y + (CIRCLE_SIZE / 2));
                     }
 
 
@@ -236,7 +216,7 @@ namespace Quantum.TriangleProblemProject
             }
             if (selectedVertex >= 0)
                 e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[selectedVertex].x - 3,
-                    g.points[selectedVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2*OFFSET_SIZE), CIRCLE_SIZE + (2*OFFSET_SIZE)));
+                    g.points[selectedVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2 * OFFSET_SIZE), CIRCLE_SIZE + (2 * OFFSET_SIZE)));
             if (ctrlVertex >= 0)
                 e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[ctrlVertex].x - 3,
                     g.points[ctrlVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2 * OFFSET_SIZE), CIRCLE_SIZE + (2 * OFFSET_SIZE)));
@@ -279,24 +259,6 @@ namespace Quantum.TriangleProblemProject
             Refresh();
         }
 
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
-            if (e.KeyChar == (char)Keys.E)
-                if (ctrlVertex >= 0 && selectedVertex >= 0)
-                    g.setEdge(ctrlVertex, selectedVertex, 1);
-            Refresh();
-        }
-
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.E || e.KeyData == Keys.E || e.KeyValue == (char)Keys.E)
-                if (ctrlVertex >= 0 && selectedVertex >= 0)
-                    g.setEdge(ctrlVertex, selectedVertex, 1);
-            Refresh();
-
-        }
-
         private int setSelectedVertex(int x, int y)
         {
             for (int i = 0; i < g.points.Count; i++)
@@ -312,11 +274,6 @@ namespace Quantum.TriangleProblemProject
         private void button2_Click(object sender, EventArgs e)
         {
             isSelected = true;
-        }
-
-        private void quantumRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void resetButton_Click(object sender, EventArgs e)
@@ -482,6 +439,16 @@ namespace Quantum.TriangleProblemProject
             }
         }
 
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void quantumRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
         //Converts a 2d array to a usable qarray
         public static QArray<QArray<long>> arrToQArray(int[,] input)
         {
@@ -495,7 +462,6 @@ namespace Quantum.TriangleProblemProject
             }
 
             return returnArray;
-
         }
 
         private void setIcon()
@@ -509,15 +475,28 @@ namespace Quantum.TriangleProblemProject
             i.Dispose();
         }
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.E)
+            {
+                if (selectedVertex != -1 && ctrlVertex != -1)
+                    g.setEdge(selectedVertex, ctrlVertex, Graph.SET);
+                Refresh();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
+
+        //We were unable to work out a probability of finding a triangle that correctly matches the outputs we got in testing.
+        //However, what we do know is that increasing the repeats increases the probability, 
+        //and increasing the iterations changes the probability on a sinusoidal wave
+        //With more time, we would be able to get this working
+        /*
         private static double calculateProbability(int iteration, int repeat, int[,] adjMat)
         {
-
-            // (1 - (P(E) * (1-P(V) / x) ^ n) / x) ^ n
+            // (1 - (P(E) * (1-P(V) / x) ^ n) / x) ^ n | where x is the number of possible hits, and n is the number of times the search is repeated
             int size = (int)Math.Pow(2, getNumOfQubitsUsed(adjMat.GetLength(0)));
             int[] vertexValues = getAdjacencyValues(adjMat);
             int[] edgesList = getAllEdges(adjMat);
@@ -534,7 +513,7 @@ namespace Quantum.TriangleProblemProject
             }
             if (iteration == 0 && repeat == 0)
             {
-                repeat = (size > edgesSum) ? 10 * size : 10 * edgesSum;
+                repeat = (size > edgesSum) ? size : edgesSum;
                 iteration = (int)Math.Sqrt(edgesSum) - 1;
                 if (iteration == 0)
                 {
@@ -556,7 +535,7 @@ namespace Quantum.TriangleProblemProject
                         Math.Sin((2.0 * (double)iteration + 1.0) * Math
                                 .Asin(Math.Sqrt(vertexValues[i]) / Math.Sqrt(vertexSize))),
                         2.0);
-               
+
             }
 
             chanceOfFindingAVertex = chanceOfFindingAVertex / edgesSize;
@@ -625,10 +604,7 @@ namespace Quantum.TriangleProblemProject
                 res += 1;
             }
             return res;
-
         }
-
-
+        */
     }
-
 }

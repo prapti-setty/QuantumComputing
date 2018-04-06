@@ -64,13 +64,14 @@ namespace Quantum.TriangleProblemProject
                 c = 'a';
             }
             return Char.ToString(c);
-
         }
+
         public void setEdge(int v1, int v2, int set)
         {
             adjMatrix[v1, v2] = set;
             adjMatrix[v2, v1] = set;
         }
+
         /*  public void printGraph()
           {
               Console.Write("V ");
@@ -87,6 +88,7 @@ namespace Quantum.TriangleProblemProject
               }
               Console.ReadLine();
           }*/
+
         public int[,] getAdjMat()
         {
             return adjMatrix;
