@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
     /// <summary>
     /// A graph with adjacency matrix A has a triangle if and only if trace(A^3) is non-zero.
-    /// 
-    /// This is efficient for dense graphs, with time complexity of O(n^2.373), which is simply
-    /// the best known complexity for multiplying matrices.
+    /// Runtime for this algorithim is O(n^3)
+
     /// </summary>
-    public class TraceAlgorithm : IClassicalAlgorithm {
+    public class TraceAlgorithm : IAlgorithm {
         public string Name => "Trace of Matrix";
 
         public bool Run(int[,] mat) {
