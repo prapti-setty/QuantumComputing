@@ -344,6 +344,8 @@ namespace Quantum.TriangleProblemProject
             }
         }
 
+		bool IncludeQuantumInGraph = false;
+
         private void btnGraph_Click(object sender, EventArgs e)
         {
             var myModel = new PlotModel
@@ -364,6 +366,12 @@ namespace Quantum.TriangleProblemProject
                 new AlgorithmResults(matrixCount, () => new TraceAlgorithm()),
                 new AlgorithmResults(10, () => new QuantumAlgorithm(simulator)),
             };
+
+			// Don't include quantum, the first time we run the graph.
+			if (!IncludeQuantumInGraph) {
+				IncludeQuantumInGraph = true;
+				algorithmResults.RemoveAt(algorithmResults.Count - 1);
+			}
 
             for (int i = minVertices; i <= maxVertices; i += verticesGap)
             {
