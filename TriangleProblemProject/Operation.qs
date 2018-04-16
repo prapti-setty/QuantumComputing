@@ -460,11 +460,11 @@ namespace Quantum.TriangleProblemProject
 			{
 				if (Length(adjMat) >Length(edges))
 				{
-					set repeats = Length(adjMat) * 10;
+					set repeats = Length(adjMat);
 				}
 				else
 				{
-					set repeats = Length(edges) * 10;
+					set repeats = Length(edges);
 				}
 
 				mutable marked = 0;

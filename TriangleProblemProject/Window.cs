@@ -325,7 +325,7 @@ namespace Quantum.TriangleProblemProject
             myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Vertex Count", MinorStep = 1, MajorStep = 1 });
             myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Time Taken (Relative)" });
 
-            int matrixCount = 10000;
+            int matrixCount = 10;
             int minVertices = 3;
             int maxVertices = 8;
             int verticesGap = 1;
