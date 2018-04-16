@@ -12,6 +12,9 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
         public string Name => "Brute Force";
 
         public (int,int,int) getTriangle(int[,] mat) {
+            int a = -1;
+            int b = -1;
+            int c = -1;
             int nodes = mat.GetLength(0);
             for (int i = 0; i < nodes; i++) {
                 for (int j = i+1; j < nodes; j++) {
@@ -19,14 +22,17 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
                     if (mat[i,j] == 1) {
                         for (int k = j+1; k < nodes; k++) {
                             if (mat[i,k] == 1 && mat[j,k] == 1) {
-                                return (i,j,k);
+                                a = 1;
+                                b = j;
+                                c = k;
+                               
                             }
                         }
                     }
                 }
             }
 
-            return (-1,-1,-1);
+            return (a, b, c);
         }
         public bool Run(int[,] mat)
         {
