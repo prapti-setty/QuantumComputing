@@ -296,9 +296,12 @@ namespace Quantum.TriangleProblemProject
             public long MaxTime;
             public List<long> MaxTimes = new List<long>();
             public List<long> Times = new List<long>();
+			// How many matrices to run this algorithm with.
+			public int MatrixCount;
 
-            public AlgorithmResults(Func<IAlgorithm> algorithmConstructor)
+            public AlgorithmResults(int matrixCount, Func<IAlgorithm> algorithmConstructor)
             {
+				MatrixCount = matrixCount;
                 AlgorithmConstructor = algorithmConstructor;
             }
 
@@ -325,16 +328,16 @@ namespace Quantum.TriangleProblemProject
             myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Vertex Count", MinorStep = 1, MajorStep = 1 });
             myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Time Taken (Relative)" });
 
-            int matrixCount = 10;
+            int matrixCount = 10000;
             int minVertices = 3;
             int maxVertices = 8;
             int verticesGap = 1;
             QuantumSimulator simulator = new QuantumSimulator();
             List<AlgorithmResults> algorithmResults = new List<AlgorithmResults> {
                 // Repeat brute force a bunch of times, else its times are too small.
-                new AlgorithmResults(() => new BruteForceAlgorithm()),
-                new AlgorithmResults(() => new TraceAlgorithm()),
-                new AlgorithmResults(() => new QuantumAlgorithm(simulator)),
+                new AlgorithmResults(matrixCount, () => new BruteForceAlgorithm()),
+                new AlgorithmResults(matrixCount, () => new TraceAlgorithm()),
+                new AlgorithmResults(10, () => new QuantumAlgorithm(simulator)),
             };
 
             for (int i = minVertices; i <= maxVertices; i += verticesGap)
@@ -362,10 +365,12 @@ namespace Quantum.TriangleProblemProject
                     // Run each algorithm on this matrix.
                     foreach (AlgorithmResults result in algorithmResults)
                     {
-                        IAlgorithm algorithm = result.AlgorithmConstructor();
-                        Stopwatch watch = Stopwatch.StartNew();
-                        algorithm.Run(matrix);
-                        result.AddTime(watch.ElapsedTicks);
+						if (matrixI < result.MatrixCount) {
+							IAlgorithm algorithm = result.AlgorithmConstructor();
+							Stopwatch watch = Stopwatch.StartNew();
+							algorithm.Run(matrix);
+							result.AddTime(watch.ElapsedTicks);
+						}
                     }
                 }
             }
