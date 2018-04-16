@@ -38,13 +38,37 @@ namespace Quantum.TriangleProblemProject
             InitializeComponent();
             g = new Graph();
             quantumRadioButton.Checked = true;
-            g.addVertex("a", getRandColor(), 45, 45);
-            g.addVertex("b", getRandColor(), 130, 90);
-            g.addVertex("c", getRandColor(), 45, 113);
-            g.addVertex("d", getRandColor(), 90, 160);
+            g.addVertex("a", Brushes.Red, 56, 56);
             textBox3.Text = "0";
             textBox4.Text = "0";
             richTextBox1.ReadOnly = true;
+        }
+        private void addSkewedVertex(int center, int x, int y, Brush b)
+        {
+            if (Math.Abs(y - center) > 30) y = center + Math.Sign(y-center) *(int)(( center) * (0.5 + x / (6.0 * center)));
+             g.addVertex("", b, x, y);
+        }
+        private void drawSquare(int startx,int startY, Brush b)
+        {
+           // g.addVertex("", b, startx, startY);
+            addSkewedVertex(140, startx, startY, b);
+          //  g.addVertex("", b, startx + 100, startY + 100);
+            addSkewedVertex(140, startx + 100, startY +  100, b);
+          //  g.addVertex("", b, startx + 100, startY );
+               addSkewedVertex(140,startx +100, startY,b);
+            g.setEdge(g.getAdjMat().GetLength(0) - 1, g.getAdjMat().GetLength(0) - 3, 1);
+          //  g.addVertex("", b, startx, startY+100);
+            addSkewedVertex(140, startx , startY + 100, b);
+            g.setEdge(g.getAdjMat().GetLength(0)-3, g.getAdjMat().GetLength(0) - 2,1);
+            g.setEdge(g.getAdjMat().GetLength(0) - 1, g.getAdjMat().GetLength(0) - 3, 1);
+            g.setEdge(g.getAdjMat().GetLength(0) - 1, g.getAdjMat().GetLength(0) - 4, 1);
+        }
+        private void drawMicrosotSymbol()
+        {
+            drawSquare(30, 30, new SolidBrush(Color.FromArgb(246, 83, 20)));
+            drawSquare(150, 30, new SolidBrush(Color.FromArgb(124, 181, 0)));
+            drawSquare(30, 150, new SolidBrush(Color.FromArgb(0, 161, 241)));
+            drawSquare(150, 150, new SolidBrush(Color.FromArgb(255, 187, 0)));
         }
         private void runQuantum(int[,] adjMat)
         {
@@ -102,6 +126,7 @@ namespace Quantum.TriangleProblemProject
         private void Window_Load(object sender, EventArgs e)
         {
             setIcon();
+            setMicroIcon();
         }
 
         private void runBruteForce(int[,] adjMat)
@@ -460,6 +485,15 @@ namespace Quantum.TriangleProblemProject
 
         }
 
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            selectedVertex = -1;
+            ctrlVertex = -1;
+            g = new Graph();
+            drawMicrosotSymbol();
+            Refresh();
+        }
+
         //Converts a 2d array to a usable qarray
         public static QArray<QArray<long>> arrToQArray(int[,] input)
         {
@@ -484,6 +518,18 @@ namespace Quantum.TriangleProblemProject
             Icon i = Icon.FromHandle(pIcon);
             this.Icon = i;
             i.Dispose();
+        }
+        private void setMicroIcon()
+        {
+            string dir = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+            string filename = System.IO.Path.Combine(dir, @"micro.png");
+            button1.BackgroundImage = Image.FromFile(filename);
+            button1.BackgroundImageLayout = ImageLayout.Stretch;
+         //   IntPtr pIcon = b.GetHicon();
+          //  Icon i = Icon.FromHandle(pIcon);
+           // this.Icon = i;
+           // button1.Image = b;
+            
         }
 
 
