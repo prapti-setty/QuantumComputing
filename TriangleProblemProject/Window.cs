@@ -53,7 +53,9 @@ namespace Quantum.TriangleProblemProject
             var resCount = 0;
             var runNum = 1;
             var bad = 0;
-            QuantumAlgorithm quantumAlgorithm = new QuantumAlgorithm();
+            QuantumSimulator simulator = new QuantumSimulator();
+
+            QuantumAlgorithm quantumAlgorithm = new QuantumAlgorithm(simulator);
             for (int i = 0; i < runNum; i++)
             {
                 var resOne = quantumAlgorithm.getTriangle(adjMat, iterations, repeats);
@@ -246,9 +248,6 @@ namespace Quantum.TriangleProblemProject
                     selectedVertex = newSel;
                 else
                     selectedVertex = newSel;
-
-
-
             }
             else
             {
@@ -326,16 +325,16 @@ namespace Quantum.TriangleProblemProject
             myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "Vertex Count", MinorStep = 1, MajorStep = 1 });
             myModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "Time Taken (Relative)" });
 
-            int matrixCount = 1;
+            int matrixCount = 10000;
             int minVertices = 3;
-            int maxVertices = 4;
+            int maxVertices = 8;
             int verticesGap = 1;
-
+            QuantumSimulator simulator = new QuantumSimulator();
             List<AlgorithmResults> algorithmResults = new List<AlgorithmResults> {
                 // Repeat brute force a bunch of times, else its times are too small.
                 new AlgorithmResults(() => new BruteForceAlgorithm()),
                 new AlgorithmResults(() => new TraceAlgorithm()),
-                new AlgorithmResults(() => new QuantumAlgorithm()),
+                new AlgorithmResults(() => new QuantumAlgorithm(simulator)),
             };
 
             for (int i = minVertices; i <= maxVertices; i += verticesGap)

@@ -11,9 +11,9 @@ namespace Quantum.TriangleProblemProject.ClassicalAlgorithms {
         private QuantumSimulator _simulator;
         public string Name => "Quantum";
 
-        public QuantumAlgorithm()
+        public QuantumAlgorithm(QuantumSimulator simulator)
         {
-            _simulator = new QuantumSimulator();
+            _simulator = simulator;
         }
 
         public bool Run(int[,] mat)

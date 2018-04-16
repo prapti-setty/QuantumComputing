@@ -477,7 +477,10 @@ namespace Quantum.TriangleProblemProject
 					}
 				}
 
-				set iterations = Round(Sqrt(ToDouble(Length(edges) / marked)))-1;
+				if (marked >= 1)
+				{
+					set iterations = Round(Sqrt(ToDouble(Length(edges) / marked)))-1;
+				}
 				if (iterations == 0)
 				{
 					set iterations = 1;
