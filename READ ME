@@ -1,0 +1,23 @@
+What we were expected to do:
+
+Microsoft set us the challenge of learning about Quantum Computing, 
+bringing our ideas to the table, and then testing their recently 
+released Quantum Computing Development Kit. 
+
+This development kit includes what a developer would need to get 
+started in the field: a Q# language and compiler along with a Q# library, 
+a local quantum computing simulator, and a Visual Studio extension. The 
+aim is to test whether with the lack of hardware, the software provided 
+accurately simulates how a quantum computer would work.
+
+What we did:
+1) Choose Algorithm (Triangle Finding Problem)
+2) Implement Classic Algorithm (Brute Force and Trace)
+3) Implement Quantum Algorithm
+4) Decide on method of comparison and compare
+
+Accompanying Documentation:
+1) Requirements Report
+2) Development Report
+3) Management Report
+4) Quantum Paper (written by team about experience)
