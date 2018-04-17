@@ -358,7 +358,7 @@ namespace Quantum.TriangleProblemProject
                 // Repeat brute force a bunch of times, else its times are too small.
                 new AlgorithmResults(matrixCount, () => new BruteForceAlgorithm()),
                 new AlgorithmResults(matrixCount, () => new TraceAlgorithm()),
-                new AlgorithmResults(10, () => new QuantumAlgorithm(simulator)),
+                new AlgorithmResults(100, () => new QuantumAlgorithm(simulator)),
             };
 
 			// Don't include quantum, the first time we run the graph.
