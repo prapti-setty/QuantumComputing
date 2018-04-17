@@ -76,7 +76,7 @@ namespace Quantum.TriangleProblemProject
         public string getNextName()
         {
             char c;
-            if (points.Count > 0)
+            if (points.Count > 0 && points[points.Count - 1].idt.Length > 0)
             {
                 char[] arr = points[points.Count - 1].idt.ToCharArray();
                 c = ++arr[0];
