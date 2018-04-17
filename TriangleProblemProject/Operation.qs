@@ -458,15 +458,6 @@ namespace Quantum.TriangleProblemProject
 			mutable iterations=1;
 			if (iterationsInp == 0 && repeatsInp == 0)
 			{
-				if (Length(adjMat) >Length(edges))
-				{
-					set repeats = Length(adjMat);
-				}
-				else
-				{
-					set repeats = Length(edges);
-				}
-
 				mutable marked = 0;
 
 				for (i in 0..Length(edges) - 1)
@@ -475,6 +466,15 @@ namespace Quantum.TriangleProblemProject
 					{
 						set marked = marked + 1;
 					}
+				}
+
+				if (Length(adjMat) >Length(edges))
+				{
+					set repeats = Length(adjMat) * 5;
+				}
+				else
+				{
+					set repeats = marked * 5;
 				}
 
 				if (marked >= 1)
@@ -496,6 +496,8 @@ namespace Quantum.TriangleProblemProject
 				set repeats = repeatsInp;
 				set iterations = iterationsInp;
 			}
+			mutable outputString = ToStringI(repeats);
+			Message(outputString);
 			mutable edgeQubits = getNumOfQubits(Length(edges));
 			mutable vertexQubits = getNumOfQubits(Length(adjMat));
 			mutable resultCheck = One;
