@@ -26,7 +26,6 @@ namespace Quantum.TriangleProblemProject
         private int iterations = 0;
         private int repeats = 0;
         private int currentTriangleA, currentTriangleB, currentTriangleC = -1;
-        private Boolean isSelected = false;
         private int selectedVertex, ctrlVertex = -1;
         private static readonly int CIRCLE_SIZE = 16;
         private static readonly int OFFSET_SIZE = 3;
@@ -161,10 +160,6 @@ namespace Quantum.TriangleProblemProject
             DoubleBuffered = true;
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            isSelected = true;
-        }
         //Find Triangle button clicked
         private void button1_Click(object sender, EventArgs e)
         {
@@ -259,13 +254,7 @@ namespace Quantum.TriangleProblemProject
         private void panel1_MouseClick_1(object sender, MouseEventArgs e)
         {
             int newSel = setSelectedVertex(e.X, e.Y);
-            if (isSelected)
-            {
-                g.addVertex(g.getNextName(), getRandColor(), e.X, e.Y);
-                isSelected = false;
-                selectedVertex = g.points.Count - 1;
-            }
-            else if (newSel >= 0)
+            if (newSel >= 0)
             {
                 if (Control.ModifierKeys == Keys.Shift && selectedVertex >= 0)
                     ctrlVertex = newSel;
@@ -283,12 +272,12 @@ namespace Quantum.TriangleProblemProject
             Refresh();
 
         }
-        private void edgeButton_Click(object sender, EventArgs e)
-        {
-            if (ctrlVertex >= 0 && selectedVertex >= 0)
-                g.setEdge(ctrlVertex, selectedVertex, Graph.SET);
+
+		private void panel1_MouseDoubleClick(object sender, MouseEventArgs e) {
+			g.addVertex(g.getNextName(), getRandColor(), e.X, e.Y);
+			selectedVertex = g.points.Count - 1;
             Refresh();
-        }
+		}
 
         private int setSelectedVertex(int x, int y)
         {
@@ -300,11 +289,6 @@ namespace Quantum.TriangleProblemProject
             }
 
             return -1;
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            isSelected = true;
         }
 
         private void resetButton_Click(object sender, EventArgs e)
@@ -517,7 +501,7 @@ namespace Quantum.TriangleProblemProject
             return returnArray;
         }
 
-        private void setIcon()
+		private void setIcon()
         {
             string dir = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
             string filename = System.IO.Path.Combine(dir, @"Quantum.png");
