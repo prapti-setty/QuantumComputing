@@ -44,6 +44,28 @@ namespace Quantum.TriangleProblemProject
             }
             adjMatrix = newMatrix;
         }
+		public void removeVertex(int index) {
+			points.RemoveAt(index);
+            int[,] newMatrix = new int[adjMatrix.GetLength(0) - 1, adjMatrix.GetLength(1) - 1];
+            for (int i = 0; i < newMatrix.GetLength(0); i++)
+            {
+				int i2 = i;
+				if (i2 >= index) {
+					i2++;
+				}
+
+                for (int j = 0; j < newMatrix.GetLength(1); j++)
+                {
+					int j2 = j;
+					if (j2 >= index) {
+						j2++;
+					}
+
+                    newMatrix[i, j] = adjMatrix[i2, j2];
+                }
+            }
+			adjMatrix = newMatrix;
+		}
         private int getIndexOfV(String v)
         {
             for (int i = 0; i < points.Count; i++)

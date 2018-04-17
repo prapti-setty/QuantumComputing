@@ -541,7 +541,15 @@ namespace Quantum.TriangleProblemProject
 				ToggleEdge();
                 Refresh();
                 return true;
-            }
+            } else if (keyData == Keys.Delete) {
+				// Delete vertex
+				if (selectedVertices.Count == 1) {
+					g.removeVertex(selectedVertices[0]);
+					selectedVertices.Clear();
+				}
+				Refresh();
+				return true;
+			}
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
