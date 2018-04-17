@@ -26,7 +26,7 @@ namespace Quantum.TriangleProblemProject
         private int iterations = 0;
         private int repeats = 0;
         private int currentTriangleA, currentTriangleB, currentTriangleC = -1;
-        private int selectedVertex, ctrlVertex = -1;
+		private List<int> selectedVertices = new List<int>();
         private static readonly int CIRCLE_SIZE = 16;
         private static readonly int OFFSET_SIZE = 3;
         Random randGen;
@@ -243,30 +243,40 @@ namespace Quantum.TriangleProblemProject
             9.0F, FontStyle.Bold), Brushes.Black, g.points[i].x + (CIRCLE_SIZE / 2), g.points[i].y + (CIRCLE_SIZE + OFFSET_SIZE));
 
             }
-            if (selectedVertex >= 0)
-                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[selectedVertex].x - OFFSET_SIZE,
-                    g.points[selectedVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2 * OFFSET_SIZE), CIRCLE_SIZE + (2 * OFFSET_SIZE)));
-            if (ctrlVertex >= 0)
-                e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[ctrlVertex].x - OFFSET_SIZE,
-                    g.points[ctrlVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2 * OFFSET_SIZE), CIRCLE_SIZE + (2 * OFFSET_SIZE)));
+
+			foreach (int selectedVertex in selectedVertices) {
+				e.Graphics.DrawEllipse(Pens.Black, new Rectangle(g.points[selectedVertex].x - OFFSET_SIZE,
+					g.points[selectedVertex].y - OFFSET_SIZE, CIRCLE_SIZE + (2 * OFFSET_SIZE), CIRCLE_SIZE + (2 * OFFSET_SIZE)));
+			}
         }
 
         private void panel1_MouseClick_1(object sender, MouseEventArgs e)
         {
-            int newSel = setSelectedVertex(e.X, e.Y);
+            int newSel = GetVertexAtPos(e.X, e.Y);
             if (newSel >= 0)
             {
-                if (Control.ModifierKeys == Keys.Shift && selectedVertex >= 0)
-                    ctrlVertex = newSel;
-                else if (Control.ModifierKeys == Keys.Shift && selectedVertex < 0)
-                    selectedVertex = newSel;
-                else
-                    selectedVertex = newSel;
+                if (ModifierKeys == Keys.Shift) {
+					if (selectedVertices.Contains(newSel)) {
+						// If already selected, unselect.
+						selectedVertices.Remove(newSel);
+					} else {
+						selectedVertices.Add(newSel);
+						// Maxixmum of 2 vertices selected. Remove oldest.
+						if (selectedVertices.Count > 2) {
+							selectedVertices.RemoveAt(0);
+						}
+					}
+				} else {
+					// Set this as only selected vertex.
+					selectedVertices.Clear();
+					selectedVertices.Add(newSel);
+				}
             }
             else
             {
-                selectedVertex = newSel;
-                ctrlVertex = newSel;
+				if (ModifierKeys != Keys.Shift) {
+					selectedVertices.Clear();
+				}
             }
 
             Refresh();
@@ -275,11 +285,12 @@ namespace Quantum.TriangleProblemProject
 
 		private void panel1_MouseDoubleClick(object sender, MouseEventArgs e) {
 			g.addVertex(g.getNextName(), getRandColor(), e.X, e.Y);
-			selectedVertex = g.points.Count - 1;
+			selectedVertices.Clear();
+			selectedVertices.Add(g.points.Count - 1);
             Refresh();
 		}
 
-        private int setSelectedVertex(int x, int y)
+        private int GetVertexAtPos(int x, int y)
         {
             for (int i = 0; i < g.points.Count; i++)
             {
@@ -293,8 +304,7 @@ namespace Quantum.TriangleProblemProject
 
         private void resetButton_Click(object sender, EventArgs e)
         {
-            selectedVertex = -1;
-            ctrlVertex = -1;
+			selectedVertices.Clear();
             g = new Graph();
             Refresh();
         }
@@ -479,8 +489,7 @@ namespace Quantum.TriangleProblemProject
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            selectedVertex = -1;
-            ctrlVertex = -1;
+			selectedVertices.Clear();
             g = new Graph();
             drawMicrosotSymbol();
             Refresh();
@@ -529,13 +538,19 @@ namespace Quantum.TriangleProblemProject
         {
             if (keyData == Keys.E)
             {
-                if (selectedVertex != -1 && ctrlVertex != -1)
-                    g.setEdge(selectedVertex, ctrlVertex, Graph.SET);
+				ToggleEdge();
                 Refresh();
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+		private void ToggleEdge() {
+			if (selectedVertices.Count == 2) {
+				int value = g.getEdge(selectedVertices[0], selectedVertices[1]);
+				g.setEdge(selectedVertices[0], selectedVertices[1], 1 - value);
+			}
+		}
 
 
         //We were unable to work out a probability of finding a triangle that correctly matches the outputs we got in testing.

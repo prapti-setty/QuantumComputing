@@ -72,6 +72,10 @@ namespace Quantum.TriangleProblemProject
             adjMatrix[v2, v1] = set;
         }
 
+		public int getEdge(int v1, int v2) {
+			return adjMatrix[v1, v2];
+		}
+
         /*  public void printGraph()
           {
               Console.Write("V ");
