@@ -103,6 +103,9 @@
     <Compile Include="ClassicalAlgorithms\QuantumAlgorithm.cs" />
     <Compile Include="ClassicalAlgorithms\StrassenAlgorithm.cs" />
     <Compile Include="ClassicalAlgorithms\TraceAlgorithm.cs" />
+    <Compile Include="DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Graph.cs" />
     <Compile Include="Driver.cs" />
     <Compile Include="GraphForm.cs">
