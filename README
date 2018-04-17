@@ -1,14 +1,44 @@
-What we were expected to do:
-
-Microsoft set us the challenge of learning about Quantum Computing, 
+Specification:
+" Microsoft set us the challenge of learning about Quantum Computing, 
 bringing our ideas to the table, and then testing their recently 
-released Quantum Computing Development Kit. 
+released Quantum Computing Development Kit. "
 
+Description:
 This development kit includes what a developer would need to get 
 started in the field: a Q# language and compiler along with a Q# library, 
 a local quantum computing simulator, and a Visual Studio extension. The 
 aim is to test whether with the lack of hardware, the software provided 
 accurately simulates how a quantum computer would work.
+
+The main objective is to decide whether the tool released adequately 
+simulates how a quantum computer would work (as true quantum computers 
+are still in their infancy).
+
+Our Challenge:
+Learn the concepts of Quantum Computing
+Learn to use the Quantum Development kit
+    Learn Q#
+    Run Simple Programs
+    Create and run our own program
+
+Project Deliverables:
+Triangle Finding algorithm code - this will be an implementation of the 
+    algorithm in Q#. It will be executable using the Microsoft Quantum 
+    Development Kit.
+User Interface - a simple way to 
+    1) input the graph the user wants to test and 
+    2) view the results of the processing
+Technical reports - this will be a description of what we have developed, 
+with an overview of how it works, how to use it and analysis of our solution’s 
+quality (ie: how does this algorithm compare to others?).
+
+Project Timeline:
+Week 1-3 : Learn concepts of Quantum Computing and brainstorm ideas
+Week 4-6: Learn to use Development Kit (Q#)
+Week 7: Implement traditional algorithm - Brute Force 
+Week 8 : Implement Smarter Traditional Algorithm - Trace
+Week 9 - 11: Implement quantum algorithm
+Week 12: Comparisons, Graphs & Reports 
 
 What we did:
 1) Choose Algorithm (Triangle Finding Problem)
@@ -16,8 +46,12 @@ What we did:
 3) Implement Quantum Algorithm
 4) Decide on method of comparison and compare
 
-Accompanying Documentation:
+Accompanying Documentation (Technical Reports):
 1) Requirements Report
 2) Development Report
 3) Management Report
 4) Quantum Paper (written by team about experience)
+
+Possible Improvements:
+Classical: Strassens Algorithm implemented for fast matrix multiplication
+Quantum: G-BBHT search Algorithm to replace Grovers
